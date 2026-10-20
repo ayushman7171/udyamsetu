@@ -349,3 +349,28 @@ All demo accounts use the standard development password: `password123`
 | **Lakshmi Narayan** | Entrepreneur | `lakshmi@udyamsetu.in` | Natural Products | Thanjavur, Tamil Nadu | Yes (1) |
 | **Vikram Aditya** | Community Member | `vikram@udyamsetu.in` | Retail Curator | New Delhi, Delhi | No (0) |
 | **Pooja Deshmukh** | Community Member | `pooja@udyamsetu.in` | Conscious Consumer | Pune, Maharashtra | No (0) |
+
+---
+
+## ⚡ Supabase & Vercel Deployment
+
+UdyamSetu is architected with a **dual adapter pattern**:
+- **Local Development**: Runs with Flask (`python app.py`) and SQLite (`udyamsetu.db`).
+- **Cloud / Production**: Deploys statically to **Vercel** backed by **Supabase Auth** and **Supabase PostgreSQL** via Row Level Security (RLS) and PostgREST.
+
+### 1. Supabase Setup
+- SQL migrations are versioned under [`supabase/migrations/`](supabase/migrations/) or combined in [`supabase/full_schema_and_rls.sql`](supabase/full_schema_and_rls.sql).
+- In Supabase Dashboard -> **Authentication** -> **Providers** -> **Email**:
+  - Enable Email Provider: **ON**
+  - Allow new users to sign up: **ON**
+  - Confirm email: **OFF** (for instant logins without SMTP limits)
+- Run the migration/seeding script:
+  ```bash
+  python scripts/migrate_sqlite_to_supabase.py
+  ```
+
+### 2. Vercel Deployment
+1. Push this repository to GitHub.
+2. In [Vercel](https://vercel.com), import the repository as a static site.
+3. Vercel automatically reads [`vercel.json`](vercel.json) to configure clean routes, headers, and asset caching.
+
