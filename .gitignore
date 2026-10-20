@@ -1,29 +1,53 @@
-# Environment & Secrets
+# =============================================================================
+# UdyamSetu Git Ignore Rules
+# =============================================================================
+
+# Environment variables & secrets (Never commit secrets to GitHub)
 .env
 .env.*
 !.env.example
 *.local
 
-# Database backups & local SQLite files
+# Database files & local SQLite instances
 *.db
 *.db-journal
 *.sqlite
 *.sqlite3
+test_udyamsetu.db
+udyamsetu_backup_*.db
 
-# Python & testing caches
+# Python bytecode, environments & cache
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
 .pytest_cache/
-test_udyamsetu.db
 
-# OS & Editor files
+# Deployment & build artifacts
+.vercel
+.output/
+dist/
+build/
+node_modules/
+
+# OS-specific files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-*.swp
+desktop.ini
+
+# Editor & IDE configurations
 .vscode/
 .idea/
-
-# Node / dependencies if applicable
-node_modules/
-.vercel
+*.swp
+*.swo
+*~
