@@ -449,7 +449,7 @@ def seed_notifications_data(conn):
         (
             "asha-devi", "ramesh-kumar", "new_connection",
             "New connection with Ramesh Kumar",
-            "Ramesh Kumar connected with you on UdyamSetu.",
+            "Ramesh Kumar connected with you on ThriveHub.",
             "user", "ramesh-kumar", "profile.html?id=ramesh-kumar",
             1, "seed-notif-4"
         ),
@@ -1129,7 +1129,7 @@ def seed_database(conn):
     """, connections)
 
     conn.commit()
-    print("UdyamSetu SQLite Database initialized and seeded successfully.")
+    print("ThriveHub SQLite Database initialized and seeded successfully.")
 
 def print_database_counts():
     """Prints a detailed count of all database entities."""
@@ -1141,7 +1141,7 @@ def print_database_counts():
         "conversation_participants", "messages", "notifications",
         "discussions", "comments", "articles", "connections"
     ]
-    print("\n--- Current UdyamSetu Database Entity Counts ---")
+    print("\n--- Current ThriveHub Database Entity Counts ---")
     for table in tables:
         try:
             cursor.execute(f"SELECT COUNT(*) FROM {table};")

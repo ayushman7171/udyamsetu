@@ -342,7 +342,7 @@ def run_checks():
     try:
         conv_res = post_json(opener_a, f"{BASE_URL}/api/conversations", {
             "recipient_id": user_b_id,
-            "initial_message": "Hello Bhavna, welcome to UdyamSetu!"
+            "initial_message": "Hello Bhavna, welcome to ThriveHub!"
         })
         conv_data = json.loads(conv_res.read().decode())
         if conv_res.status in [200, 201] and conv_data["success"]:
@@ -370,7 +370,7 @@ def run_checks():
         msg_data = json.loads(msg_res.read().decode())
         if msg_data["success"] and len(msg_data["messages"]) >= 1:
             last_m = msg_data["messages"][-1]
-            if last_m["body"] == "Hello Bhavna, welcome to UdyamSetu!" and last_m["sender_id"] == user_a_id:
+            if last_m["body"] == "Hello Bhavna, welcome to ThriveHub!" and last_m["sender_id"] == user_a_id:
                 results["passed"].append("Message delivery & retrieval verified: User B received User A's initial message.")
             else:
                 results["failed"].append(f"Unexpected message content: {last_m}")
@@ -527,7 +527,7 @@ def run_checks():
 if __name__ == "__main__":
     res = run_checks()
     print("=" * 60)
-    print("UDYAMSETU FULL EXTENSION VERIFICATION REPORT")
+    print("THRIVEHUB FULL EXTENSION VERIFICATION REPORT")
     print("=" * 60)
     print(f"\nPASSED CHECKS ({len(res['passed'])}):")
     for p in res["passed"]:

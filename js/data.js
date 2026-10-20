@@ -1,4 +1,4 @@
-// Realistic Mock Data for UdyamSetu Platform
+// Realistic Mock Data for ThriveHub Platform
 
 const UDYAM_DATA = {
   currentUser: {
@@ -266,3 +266,4 @@ const UDYAM_DATA = {
 
 // Export to window
 window.UDYAM_DATA = UDYAM_DATA;
+window.THRIVEHUB_DATA = UDYAM_DATA;

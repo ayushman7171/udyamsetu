@@ -1,6 +1,6 @@
 /* ==========================================================================
-   UdyamSetu Design System & Shared Stylesheet
-   Muted blue, warm cream, clean accessible UI for rural entrepreneurs
+   ThriveHub Design System & Shared Stylesheet
+   Muted blue, warm cream, clean accessible UI for entrepreneurs
    ========================================================================== */
 
 :root {
@@ -135,6 +135,41 @@ button, input, select, textarea {
   align-items: center;
   gap: 10px;
   text-decoration: none;
+}
+
+.brand-logo {
+  height: 42px;
+  width: auto;
+  max-width: 170px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.brand:hover .brand-logo {
+  transform: scale(1.02);
+}
+
+.auth-brand-logo {
+  height: 50px;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.footer-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  height: 28px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .brand-icon {

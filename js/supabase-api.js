@@ -1,5 +1,5 @@
 // =============================================================================
-// UdyamSetu Supabase API Client
+// ThriveHub Supabase API Client
 // Direct PostgREST & Auth adapter for all platform features.
 // =============================================================================
 
@@ -676,7 +676,7 @@ window.UdyamAPI = {
       link_url: n.link_url,
       is_read: n.is_read,
       created_at: n.created_at,
-      actor_name: n.actor ? n.actor.name : "UdyamSetu",
+      actor_name: n.actor ? n.actor.name : "ThriveHub",
       actor_avatar: n.actor ? n.actor.avatar : "assets/images/digital_rahul.jpg"
     }));
   },
@@ -716,3 +716,5 @@ window.UdyamAPI = {
     return data || [];
   }
 };
+
+window.ThriveHubAPI = window.UdyamAPI;

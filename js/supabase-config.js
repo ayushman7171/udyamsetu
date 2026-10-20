@@ -1,5 +1,5 @@
 // =============================================================================
-// UdyamSetu Supabase Client Configuration
+// ThriveHub Supabase Client Configuration
 // Safe for public browser exposure and Vercel static hosting.
 // =============================================================================
 

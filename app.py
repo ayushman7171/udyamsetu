@@ -127,6 +127,15 @@ def serve_assets(filename):
 def serve_locales(filename):
     return send_from_directory("locales", filename)
 
+@app.route("/logo/<path:filename>")
+def serve_logo(filename):
+    return send_from_directory("logo", filename)
+
+@app.route("/favicon.ico")
+@app.route("/favicon.svg")
+def serve_favicon():
+    return send_from_directory("logo", "favicon.svg", mimetype="image/svg+xml")
+
 # -----------------------------------------------------------------------------
 # HTML Page Routing
 # -----------------------------------------------------------------------------
@@ -1525,7 +1534,7 @@ def api_connect():
             actor_id=current_id,
             event_type="new_connection",
             title=f"New connection with {c_name}",
-            message=f"{c_name} connected with you on UdyamSetu.",
+            message=f"{c_name} connected with you on ThriveHub.",
             reference_type="user",
             reference_id=current_id,
             link_url=f"profile.html?id={current_id}",
@@ -2324,7 +2333,7 @@ def api_delete_notification(notif_id):
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
     print("==================================================")
-    print("  Starting UdyamSetu Production Server (Port 5000)")
+    print("  Starting ThriveHub Production Server (Port 5000)")
     print("  SQLite Database: udyamsetu.db")
     print("  Access Platform at: http://127.0.0.1:5000/")
     print("==================================================")

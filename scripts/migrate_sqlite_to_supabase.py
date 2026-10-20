@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UdyamSetu: SQLite to Supabase Migration & Seeding Script
+ThriveHub: SQLite to Supabase Migration & Seeding Script
 Safely maps legacy SQLite records to Supabase Auth users & PostgreSQL tables.
 Supports both:
 1. Supabase Service Role Key (Admin mode - recommended, bypasses email rate limits)

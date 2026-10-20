@@ -1,7 +1,7 @@
-# UdyamSetu (उद्यमसेतु)
+# ThriveHub
 
-> **Rural Entrepreneurs, Stronger Together.**  
-> A dedicated networking and collaboration platform designed for rural Indian entrepreneurs, artisans, and grassroots producers.
+> **People · Opportunities · Growth**  
+> A dedicated networking and collaboration platform designed for entrepreneurs, artisans, and grassroots producers, artisans, and grassroots producers.
 
 ---
 
@@ -221,7 +221,7 @@ All seed accounts are initialized with password: `password123`
 
 ## 🔔 In-App Notification System
 
-UdyamSetu includes a database-backed, transactional in-app notification engine:
+ThriveHub includes a database-backed, transactional in-app notification engine:
 - **Persistent Storage (`notifications` Table)**:
   - Fields: `id`, `recipient_id`, `actor_id`, `event_type`, `title`, `message`, `reference_type`, `reference_id`, `link_url`, `is_read`, `dedup_key`, `created_at`.
   - Foreign key constraints to `users(user_id)` with cascading deletion.
@@ -255,7 +255,7 @@ UdyamSetu includes a database-backed, transactional in-app notification engine:
 
 ## 🌐 Multilingual Support & Localization Engine (i18n)
 
-UdyamSetu includes comprehensive multilingual support covering English and all **22 scheduled Indian languages**:
+ThriveHub includes comprehensive multilingual support covering English and all **22 scheduled Indian languages**:
 1. **Hindi (`hi`)** — हिन्दी (Complete / Human-reviewed)
 2. **Bengali (`bn`)** — বাংলা (Complete / Human-reviewed)
 3. **Marathi (`mr`)** — मराठी (Complete / Human-reviewed)
@@ -313,7 +313,7 @@ python test_i18n.py
 
 ## 🗄️ Database Management & Demo Dataset
 
-The UdyamSetu development environment uses an SQLite database (`udyamsetu.db`) configured with foreign key enforcement and clean demo data.
+The ThriveHub development environment uses an SQLite database (`udyamsetu.db`) configured with foreign key enforcement and clean demo data.
 
 ### Resetting and Reseeding the Database
 To perform a safe reset and reseed with clean demo data:
@@ -354,7 +354,7 @@ All demo accounts use the standard development password: `password123`
 
 ## ⚡ Supabase & Vercel Deployment
 
-UdyamSetu is architected with a **dual adapter pattern**:
+ThriveHub is architected with a **dual adapter pattern**:
 - **Local Development**: Runs with Flask (`python app.py`) and SQLite (`udyamsetu.db`).
 - **Cloud / Production**: Deploys statically to **Vercel** backed by **Supabase Auth** and **Supabase PostgreSQL** via Row Level Security (RLS) and PostgREST.
 

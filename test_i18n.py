@@ -1,5 +1,5 @@
 """
-Comprehensive automated tests for UdyamSetu Multilingual Support & Localization Engine (i18n).
+Comprehensive automated tests for ThriveHub Multilingual Support & Localization Engine (i18n).
 Covers:
 1. 23 Locale file integrity and key validation (en + 22 scheduled Indian languages)
 2. English fallback mechanisms and coverage checks

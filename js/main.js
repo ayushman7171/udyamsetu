@@ -1,4 +1,4 @@
-// UdyamSetu Main Interactive Logic with Flask & SQLite Backend Integration
+// ThriveHub Main Interactive Logic with Flask & SQLite Backend Integration
 
 window.CURRENT_USER = null;
 window.CSRF_TOKEN = null;
@@ -1737,7 +1737,7 @@ function renderProfileData(user) {
     const tContactMutual = t("profile.contact_mutual", "Available upon mutual connection");
     const tWebsite = t("profile.website", "Website");
     const tRegMember = t("profile.registered_member", "Registered Member");
-    const tVerifiedPrefix = t("profile.verified_prefix", "UdyamSetu Verified");
+    const tVerifiedPrefix = t("profile.verified_prefix", "ThriveHub Verified");
 
     socialList.innerHTML = `
       <div><strong>${escapeHtml(tRole)}:</strong> ${escapeHtml(isCommunity ? tCommunity : tEntrepreneur)}</div>
@@ -3255,7 +3255,7 @@ function initAuthPage() {
                 window.location.href = "profile-setup.html";
               }, 700);
             } else {
-              showToast(window.i18n ? window.i18n.t("auth.msg_welcome", {}, "Welcome to UdyamSetu! Entering platform...") : "Welcome to UdyamSetu! Entering platform...");
+              showToast(window.i18n ? window.i18n.t("auth.msg_welcome", {}, "Welcome to ThriveHub! Entering platform...") : "Welcome to ThriveHub! Entering platform...");
               setTimeout(() => {
                 window.location.href = "dashboard.html";
               }, 700);
@@ -3301,7 +3301,7 @@ function initAuthPage() {
               showToast("Account registered! Opening business profile setup...");
               setTimeout(() => { window.location.href = "profile-setup.html"; }, 700);
             } else {
-              showToast("Welcome to UdyamSetu!");
+              showToast("Welcome to ThriveHub!");
               setTimeout(() => { window.location.href = "dashboard.html"; }, 700);
             }
           } else {

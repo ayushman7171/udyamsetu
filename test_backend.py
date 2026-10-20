@@ -10,7 +10,7 @@ os.environ["UDYAMSETU_DB_PATH"] = TEST_DB_PATH
 from app import app
 from database import init_db, get_db
 
-class UdyamSetuBackendTestCase(unittest.TestCase):
+class ThriveHubBackendTestCase(unittest.TestCase):
     def setUp(self):
         # Reset database for tests
         init_db(reset=True)

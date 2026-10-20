@@ -1,17 +1,17 @@
 // =============================================================================
-// UdyamSetu Supabase Client & Authentication Helper
+// ThriveHub Supabase Client & Authentication Helper
 // Vanilla JavaScript integration for Supabase Auth and PostgREST.
 // =============================================================================
 
 (function () {
   if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.url) {
-    console.error("UdyamSetu: SUPABASE_CONFIG missing. Load js/supabase-config.js first.");
+    console.error("ThriveHub: SUPABASE_CONFIG missing. Load js/supabase-config.js first.");
     return;
   }
 
   // Check if supabase global exists from CDN
   if (typeof window.supabase === "undefined" || !window.supabase.createClient) {
-    console.warn("UdyamSetu: @supabase/supabase-js library not loaded yet.");
+    console.warn("ThriveHub: @supabase/supabase-js library not loaded yet.");
     return;
   }
 
@@ -146,4 +146,6 @@
       return data;
     }
   };
+
+  window.ThriveHubAuth = window.UdyamAuth;
 })();

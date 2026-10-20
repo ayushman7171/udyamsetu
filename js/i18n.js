@@ -1,4 +1,4 @@
-// UdyamSetu Comprehensive Localization Engine (i18n)
+// ThriveHub Comprehensive Localization Engine (i18n)
 // Supports English + 22 Scheduled Indian Languages with RTL Support & English Fallback
 
 (function (window) {
@@ -30,7 +30,8 @@
     { code: "doi", name: "Dogri", native_name: "डोगरी", dir: "ltr", status: "staged" }
   ];
 
-  const STORAGE_KEY = "udyamsetu_language";
+  const STORAGE_KEY = "thrivehub_language";
+  const LEGACY_STORAGE_KEY = "udyamsetu_language";
   const RTL_LANGUAGES = ["ur", "ks", "sd"];
 
   class I18nEngine {
@@ -44,7 +45,7 @@
 
     detectInitialLanguage() {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
+        const stored = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
         if (stored && this.isSupported(stored)) {
           return stored;
         }
@@ -218,6 +219,7 @@
 
       try {
         localStorage.setItem(STORAGE_KEY, newCode);
+        localStorage.setItem(LEGACY_STORAGE_KEY, newCode);
       } catch (e) {}
 
       // Load dictionary if needed

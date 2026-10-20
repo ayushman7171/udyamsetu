@@ -1,4 +1,4 @@
-# Indian States and Districts Dataset for UdyamSetu
+# Indian States and Districts Dataset for ThriveHub
 
 INDIAN_LOCATIONS = {
     "Andhra Pradesh": [
