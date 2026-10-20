@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications & Activity | UdyamSetu</title>
+  <meta name="description" content="Track your incoming messages, collaboration requests, and network activities on UdyamSetu.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="messages.html" class="nav-link" data-i18n="nav.messages">Messages</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search Directory" data-i18n-title="nav.search_directory">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notifications Page Main -->
+  <main class="notifications-page-layout">
+    <div class="notif-page-card">
+      <div class="notif-page-header">
+        <div class="notif-page-title">
+          <h1 data-i18n="notif.title">Notifications</h1>
+          <p data-i18n="notif.subtitle">Stay updated on new messages, partnership proposals, and community interactions.</p>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline btn-sm" id="pageMarkAllReadBtn" onclick="window.markAllNotificationsRead(event)" data-i18n="notif.mark_all_read">
+            Mark all as read
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="notif-page-filters" id="notifPageFilters">
+        <button type="button" class="notif-page-filter-btn active" data-filter="all" onclick="window.filterNotificationsPage('all')" data-i18n="notif.all">All</button>
+        <button type="button" class="notif-page-filter-btn" data-filter="unread" onclick="window.filterNotificationsPage('unread')" data-i18n="notif.unread_tab">Unread</button>
+        <button type="button" class="notif-page-filter-btn" data-filter="messages" onclick="window.filterNotificationsPage('messages')" data-i18n="nav.messages">Messages</button>
+        <button type="button" class="notif-page-filter-btn" data-filter="collaborations" onclick="window.filterNotificationsPage('collaborations')" data-i18n="collab.opportunity_type">Partnerships</button>
+      </div>
+
+      <!-- Notifications Stream -->
+      <div class="notif-page-body" id="notificationsPageList">
+        <div class="notif-loading-state" id="notifPageLoading">
+          <div class="spinner"></div>
+          <span style="font-size: 13.5px; color: var(--text-muted); margin-top: 8px;" data-i18n="common.loading">Loading notifications...</span>
+        </div>
+      </div>
+
+      <!-- Pagination / Load More -->
+      <div id="notifPageLoadMoreContainer" style="display: none; padding: 16px; text-align: center; border-top: 1px solid var(--border-subtle);">
+        <button type="button" class="btn btn-outline btn-sm" id="notifPageLoadMoreBtn" onclick="window.loadMorePageNotifications()" data-i18n="common.next">
+          Load More Notifications
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <p data-i18n="landing.footer_copyright">&copy; 2026 UdyamSetu. Connecting grassroots entrepreneurs across India.</p>
+      </div>
+      <div class="footer-right">
+        <a href="learn.html" data-i18n="nav.learn">Guides</a>
+        <a href="discussion.html" data-i18n="landing.footer_discussions">Community Forum</a>
+        <a href="directory.html" data-i18n="landing.footer_directory">Directory</a>
+      </div>
+    </div>
+  </footer>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a New Collaboration | UdyamSetu</title>
+  <meta name="description" content="Post a collaboration opportunity to find partners and grow your rural enterprise.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link active" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search" data-i18n-title="common.search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Create Collaboration Layout (Screen 7) -->
+  <main class="container">
+    <div class="create-collab-layout">
+      <!-- Left Form Column -->
+      <section class="card" style="padding: 32px;">
+        <h1 style="font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;" data-i18n="collab.create_title">Create a New Collaboration</h1>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px;" data-i18n="collab.create_subtitle">Find the right partner and turn your idea into reality.</p>
+
+        <form id="createCollabForm">
+          <!-- Title -->
+          <div class="form-group">
+            <label class="form-label" for="collabTitle"><span data-i18n="collab.form_title">Title</span> <span class="required">*</span></label>
+            <input type="text" id="collabTitle" class="form-input" placeholder="e.g. Looking for packaging partner" data-i18n-placeholder="collab.form_title" required>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label" for="collabDesc"><span data-i18n="collab.form_desc">Description</span> <span class="required">*</span></label>
+            <textarea id="collabDesc" class="form-textarea" rows="5" placeholder="Describe your idea, what you are looking for and how others can collaborate..." data-i18n-placeholder="collab.proposal_placeholder" required></textarea>
+          </div>
+
+          <!-- Category & Location Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label" for="collabCategory"><span data-i18n="collab.form_category">Category</span> <span class="required">*</span></label>
+              <select id="collabCategory" class="form-select" required>
+                <option value="" disabled selected data-i18n="dashboard.all_categories">Select Category</option>
+                <option value="Food Products" data-i18n="categories.Food Products">Food Products</option>
+                <option value="Handicrafts" data-i18n="categories.Handicrafts">Handicrafts</option>
+                <option value="Agriculture" data-i18n="categories.Agriculture">Agriculture</option>
+                <option value="Digital Services" data-i18n="categories.Digital Services">Digital Services</option>
+                <option value="Organic Products" data-i18n="categories.Organic Products">Organic Products</option>
+                <option value="Textiles & Handlooms" data-i18n="categories.Textiles & Handlooms">Textiles & Handlooms</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="collabLocation"><span data-i18n="collab.form_location">Location (Optional)</span></label>
+              <select id="collabLocation" class="form-select">
+                <option value="" selected data-i18n="directory.all_locations">Select Location</option>
+                <option value="Uttar Pradesh" data-i18n="states.Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Madhya Pradesh" data-i18n="states.Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Rajasthan" data-i18n="states.Rajasthan">Rajasthan</option>
+                <option value="Maharashtra" data-i18n="states.Maharashtra">Maharashtra</option>
+                <option value="Bihar" data-i18n="states.Bihar">Bihar</option>
+                <option value="Karnataka" data-i18n="states.Karnataka">Karnataka</option>
+                <option value="All India" data-i18n="states.All India">All India (Remote)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 10px;" data-i18n="collab.publish_opportunity">
+            Post Opportunity
+          </button>
+        </form>
+      </section>
+
+      <!-- Right Sidebar: Tips for a good collaboration post (Screen 7) -->
+      <aside class="tips-card">
+        <h2 class="tips-title" data-i18n="collab.tips_title">Tips for a good collaboration post</h2>
+        <ul class="tips-list">
+          <li class="tip-item">
+            <span class="tip-number">1</span>
+            <span class="tip-text" data-i18n="collab.tip_1">Be clear about what you need</span>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">2</span>
+            <span class="tip-text" data-i18n="collab.tip_2">Explain how it can be beneficial for both sides</span>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">3</span>
+            <span class="tip-text" data-i18n="collab.tip_3">Mention your expected outcomes</span>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">4</span>
+            <span class="tip-text" data-i18n="collab.tip_4">Keep the description simple and specific</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

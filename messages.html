@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages & Direct Collaborations | UdyamSetu</title>
+  <meta name="description" content="Direct and project-backed real-time messaging between rural entrepreneurs, artisans, and community members.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="messages.html" class="nav-link active" data-i18n="nav.messages">Messages</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search Directory" data-i18n-title="nav.search_directory">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Messages Container -->
+  <main class="container">
+    <div class="messages-layout" id="messagesLayout">
+
+      <!-- Left Sidebar: Conversations Inbox -->
+      <aside class="conversations-sidebar" id="conversationsSidebar">
+        <div class="conversations-sidebar-header">
+          <div class="conversations-title-row">
+            <h1>
+              <span data-i18n="msg.title">Messages</span>
+              <span class="conv-unread-pill-main" id="sidebarTotalUnreadBadge" style="display: none;">0</span>
+            </h1>
+          </div>
+
+          <!-- Search Filter Input -->
+          <div class="conv-search-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="convSearchInput" class="conv-search-input" placeholder="Search conversations..." data-i18n-placeholder="common.search">
+          </div>
+
+          <!-- Type Filters -->
+          <div class="conv-filter-tabs">
+            <button class="conv-filter-btn active" data-filter="all" data-i18n="common.all">All</button>
+            <button class="conv-filter-btn" data-filter="direct" data-i18n="msg.direct">Direct</button>
+            <button class="conv-filter-btn" data-filter="collaboration" data-i18n="msg.project">Projects</button>
+          </div>
+        </div>
+
+        <!-- Conversations List Stream -->
+        <div class="conversations-list" id="conversationsListContainer">
+          <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 13.5px;" data-i18n="common.loading">
+            Loading conversations...
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Panel: Active Conversation or Placeholder -->
+      <section class="active-chat-panel" id="activeChatPanel">
+
+        <!-- Empty State (No Chat Selected) -->
+        <div class="chat-empty-state" id="chatEmptyState">
+          <div class="chat-empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <h2 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;" data-i18n="msg.conversations">Your Conversations</h2>
+          <p style="font-size: 13.5px; max-width: 360px; line-height: 1.5; color: var(--text-muted); margin-bottom: 18px;" data-i18n="msg.select_conversation">
+            Select a conversation on the left to start coordinating with fellow rural entrepreneurs, or visit the directory to connect.
+          </p>
+          <a href="directory.html" class="btn btn-outline btn-sm" data-i18n="landing.explore_directory">Discover Entrepreneurs</a>
+        </div>
+
+        <!-- Active Chat State (Visible when a conversation is chosen) -->
+        <div id="chatActiveState" style="display: none; height: 100%; flex-direction: column;">
+          
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="chat-header-user">
+              <!-- Mobile Back Button -->
+              <button class="mobile-chat-back-btn" id="mobileChatBackBtn" title="Back to Inbox" aria-label="Back">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+
+              <div class="conv-avatar-circle" id="chatHeaderAvatar" style="width: 40px; height: 40px;">
+                <span>US</span>
+              </div>
+              <div class="chat-header-info">
+                <div class="chat-header-name">
+                  <span id="chatHeaderName">Conversation</span>
+                  <span class="badge badge-tag" id="chatHeaderBadge" style="font-size: 10.5px; padding: 2px 6px;">Direct</span>
+                </div>
+                <div class="chat-header-sub" id="chatHeaderSub">Rural Enterprise</div>
+              </div>
+            </div>
+
+            <!-- Actions (View Profile, Block Menu) -->
+            <div class="chat-header-actions">
+              <a href="#" class="btn btn-outline btn-sm" id="chatViewContextBtn" style="font-size: 12.5px; padding: 5px 12px;" data-i18n="profile.view_profile">
+                View Profile
+              </a>
+              <div style="position: relative;">
+                <button class="btn btn-outline btn-sm" id="chatOptionsBtn" title="More options" style="padding: 5px 8px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                </button>
+                <div id="chatOptionsMenu" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 6px; background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; box-shadow: var(--shadow-md); z-index: 20; min-width: 150px; padding: 4px 0;">
+                  <button id="btnBlockUnblock" style="width: 100%; text-align: left; background: none; border: none; padding: 8px 14px; font-size: 13px; color: #b91c1c; cursor: pointer;" data-i18n="msg.block_user">
+                    Block User
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Stream -->
+          <div class="chat-messages-stream" id="chatMessagesStream">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Blocked Banner (if blocked) -->
+          <div id="chatBlockedBanner" style="display: none; padding: 12px 20px; background: #fef2f2; border-top: 1px solid #fecaca; color: #991b1b; font-size: 13px; align-items: center; justify-content: space-between;">
+            <span id="chatBlockedText" data-i18n="msg.communication_blocked">Communication is blocked between these accounts.</span>
+            <button class="btn btn-outline btn-sm" id="btnUnblockInBanner" style="font-size: 12px; color: #991b1b; border-color: #fecaca;" data-i18n="msg.unblock_user">Unblock</button>
+          </div>
+
+          <!-- Message Composer Footer -->
+          <div class="chat-composer" id="chatComposer">
+            <div class="composer-input-row">
+              <textarea id="chatInput" class="composer-textarea" rows="1" maxlength="2000" placeholder="Type your message... (Enter to send, Shift+Enter for new line)" data-i18n-placeholder="msg.type_message"></textarea>
+              <button class="btn btn-primary btn-send-message" id="btnSendMessage">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                <span data-i18n="msg.send">Send</span>
+              </button>
+            </div>
+            <div class="composer-footer-meta">
+              <span>Press Enter to send</span>
+              <span id="charCounter">0 / 2000</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

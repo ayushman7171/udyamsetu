@@ -1,0 +1,29 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Database backups & local SQLite files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Python & testing caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+test_udyamsetu.db
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Node / dependencies if applicable
+node_modules/
+.vercel

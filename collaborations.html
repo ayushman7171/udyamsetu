@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaboration Opportunities | UdyamSetu</title>
+  <meta name="description" content="Discover collaboration opportunities, find business partners, and build joint ventures with rural enterprises.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link active" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search" data-i18n-title="common.search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Collaborations Main Content (Screen 6) -->
+  <main class="container">
+    <div class="collab-header-row">
+      <div class="collab-title-area">
+        <h1 data-i18n="collab.title">Collaboration Opportunities</h1>
+        <p data-i18n="collab.subtitle">Find potential partners and create something new together.</p>
+      </div>
+      <a href="create-collaboration.html" class="btn btn-primary" data-i18n="collab.post_new">
+        + Create Collaboration
+      </a>
+    </div>
+
+    <!-- Filter Tabs (Screen 6) -->
+    <div class="tab-list">
+      <button class="tab-btn collab-tab-btn" data-filter="All" data-i18n="common.all">All</button>
+      <button class="tab-btn collab-tab-btn active" data-filter="Seeking Partners" data-i18n="collab.seeking_partners">Seeking Partners</button>
+      <button class="tab-btn collab-tab-btn" data-filter="Joint Projects" data-i18n="collab.joint_projects">Joint Projects</button>
+      <button class="tab-btn collab-tab-btn" data-filter="My Requests" data-i18n="collab.my_requests">My Requests</button>
+      <button class="tab-btn collab-tab-btn" data-filter="Success Stories" data-i18n="collab.success_stories">Success Stories</button>
+    </div>
+
+    <!-- Collaborations Cards List (Rendered dynamically & interactive with modal details) -->
+    <div id="collabList" class="collab-list">
+      <!-- Fallback / Static cards matching Screen 6 -->
+      <div class="collab-card">
+        <div class="collab-card-left">
+          <div class="collab-thumb">
+            <img src="assets/images/packaging_spices.jpg" alt="Food products packaging">
+          </div>
+          <div class="collab-details">
+            <h2 class="collab-card-title">Looking for Packaging Partner</h2>
+            <p class="collab-card-desc">Need eco-friendly packaging solutions for our food products.</p>
+            <div class="collab-badges">
+              <span class="badge badge-category">Food Products</span>
+              <span class="badge badge-tag">Packaging</span>
+              <span class="badge badge-tag">Maharashtra</span>
+            </div>
+          </div>
+        </div>
+        <div class="collab-card-right">
+          <div class="collab-author-preview">
+            <div class="avatar-circle" style="width: 32px; height: 32px;">
+              <img src="assets/images/meera_patil.jpg" alt="Meera Patil">
+            </div>
+            <div class="collab-author-info">
+              <span class="collab-author-name">Meera Patil</span>
+              <span class="collab-time">2 days ago</span>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="window.openCollabModal('collab-1')">View Details</button>
+        </div>
+      </div>
+
+      <div class="collab-card">
+        <div class="collab-card-left">
+          <div class="collab-thumb">
+            <img src="assets/images/crafts_banner.jpg" alt="Handicrafts marketing">
+          </div>
+          <div class="collab-details">
+            <h2 class="collab-card-title">Marketing Collaboration</h2>
+            <p class="collab-card-desc">Looking for a digital marketing partner to help showcase our handicraft products online.</p>
+            <div class="collab-badges">
+              <span class="badge badge-category">Handicrafts</span>
+              <span class="badge badge-tag">Marketing</span>
+              <span class="badge badge-tag">Uttar Pradesh</span>
+            </div>
+          </div>
+        </div>
+        <div class="collab-card-right">
+          <div class="collab-author-preview">
+            <div class="avatar-circle" style="width: 32px; height: 32px;">
+              <img src="assets/images/artisan_asha.jpg" alt="Asha Devi">
+            </div>
+            <div class="collab-author-info">
+              <span class="collab-author-name">Asha Devi</span>
+              <span class="collab-time">3 days ago</span>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="window.openCollabModal('collab-2')">View Details</button>
+        </div>
+      </div>
+
+      <div class="collab-card">
+        <div class="collab-card-left">
+          <div class="collab-thumb">
+            <img src="assets/images/farmer_greenharvest.jpg" alt="Agriculture product development">
+          </div>
+          <div class="collab-details">
+            <h2 class="collab-card-title">Joint Product Development</h2>
+            <p class="collab-card-desc">Looking for someone to collaborate on a new range of organic spice blends.</p>
+            <div class="collab-badges">
+              <span class="badge badge-category">Agriculture</span>
+              <span class="badge badge-tag">Product Development</span>
+              <span class="badge badge-tag">Madhya Pradesh</span>
+            </div>
+          </div>
+        </div>
+        <div class="collab-card-right">
+          <div class="collab-author-preview">
+            <div class="avatar-circle" style="width: 32px; height: 32px;">
+              <img src="assets/images/farmer_greenharvest.jpg" alt="Green Harvest">
+            </div>
+            <div class="collab-author-info">
+              <span class="collab-author-name">Green Harvest</span>
+              <span class="collab-time">5 days ago</span>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="window.openCollabModal('collab-3')">View Details</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

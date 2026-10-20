@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Account | UdyamSetu</title>
+  <meta name="description" content="Register or login to UdyamSetu, the networking and collaboration platform for rural entrepreneurs and community members.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Scoped Account Type Selector & Password Strength Meter */
+    .role-selection-group {
+      margin-bottom: 16px;
+    }
+    .role-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    @media (max-width: 480px) {
+      .role-options {
+        grid-template-columns: 1fr;
+      }
+    }
+    .role-card {
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .role-card:hover {
+      border-color: var(--primary-border);
+      background: var(--card-hover);
+    }
+    .role-card.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .role-card input[type="radio"] {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      accent-color: var(--primary);
+    }
+    .role-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .role-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .password-strength-wrap {
+      margin-top: 6px;
+    }
+    .password-strength-bars {
+      display: flex;
+      gap: 4px;
+      height: 4px;
+      margin-bottom: 4px;
+    }
+    .strength-bar {
+      flex: 1;
+      height: 100%;
+      background: var(--border-color);
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+    .strength-text {
+      font-size: 11.5px;
+      color: var(--text-subtle);
+    }
+    .password-feedback {
+      font-size: 11.5px;
+      margin-top: 4px;
+      display: none;
+    }
+    .password-feedback.error {
+      color: #b91c1c;
+      display: block;
+    }
+    .password-feedback.success {
+      color: #15803d;
+      display: block;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="container">
+    <div class="auth-container">
+      <!-- Left Form Section -->
+      <div class="auth-form-wrap">
+        <div class="auth-header">
+          <a href="index.html" class="brand">
+            <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+              <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+              <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <div class="brand-text">
+              <span class="brand-title">UdyamSetu</span>
+              <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+            </div>
+          </a>
+          <h1 id="authTitle" class="auth-title">Create Your Account</h1>
+          <p id="authSubtitle" class="auth-subtitle">Join a growing community of rural entrepreneurs and supporters</p>
+        </div>
+
+        <!-- Alert Notification for Auth Errors -->
+        <div id="authAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px 14px; font-size: 13.5px; border-radius: 6px; margin-bottom: 16px;"></div>
+
+        <form id="authForm">
+          <!-- Full Name (Register only) -->
+          <div class="form-group register-only-field" id="nameFieldGroup">
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input type="text" id="regFullName" class="form-input input-with-icon" placeholder="Full Name" data-i18n-placeholder="auth.full_name_placeholder">
+            </div>
+          </div>
+
+          <!-- Account Type Selection (Register only) -->
+          <div class="role-selection-group register-only-field" id="accountTypeGroup">
+            <label class="form-label" style="font-weight: 600;" data-i18n="auth.joining_as">I am joining as:</label>
+            <div class="role-options">
+              <!-- Option 1: Entrepreneur -->
+              <label class="role-card selected" id="cardEntrepreneur">
+                <input type="radio" name="account_type" value="entrepreneur" checked>
+                <div class="role-card-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                  <span data-i18n="auth.entrepreneur">Entrepreneur</span>
+                </div>
+                <div class="role-card-desc" data-i18n="auth.entrepreneur_desc">I run or lead a rural enterprise, artisanal workshop, or farm business.</div>
+              </label>
+
+              <!-- Option 2: Community Member -->
+              <label class="role-card" id="cardCommunity">
+                <input type="radio" name="account_type" value="community_member">
+                <div class="role-card-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  <span data-i18n="auth.community_member">Community Member</span>
+                </div>
+                <div class="role-card-desc" data-i18n="auth.community_member_desc">I want to discover businesses, support artisans, and exchange knowledge.</div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Preferred Language Selection (Register only) -->
+          <div class="form-group register-only-field reg-lang-field" id="languageFieldGroup">
+            <label class="form-label" style="font-weight: 600;" data-i18n="auth.preferred_language">Preferred Language:</label>
+            <div id="regLanguageSelectorContainer"></div>
+          </div>
+
+          <!-- Email Address -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input type="email" id="regEmail" class="form-input input-with-icon" placeholder="Email Address" data-i18n-placeholder="auth.email_placeholder" required>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group" style="margin-bottom: 8px;">
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input type="password" id="regPassword" class="form-input input-with-icon" placeholder="Password (min 8 characters)" data-i18n-placeholder="auth.password_placeholder" required>
+            </div>
+            <!-- Live Password Strength Meter (Register mode) -->
+            <div class="password-strength-wrap register-only-field" id="passwordStrengthWrap" style="display: none;">
+              <div class="password-strength-bars">
+                <div class="strength-bar" id="bar1"></div>
+                <div class="strength-bar" id="bar2"></div>
+                <div class="strength-bar" id="bar3"></div>
+                <div class="strength-bar" id="bar4"></div>
+              </div>
+              <div class="strength-text" id="strengthText" data-i18n="auth.pass_min_length">Must be at least 8 characters long</div>
+            </div>
+          </div>
+
+          <!-- Confirm Password (Register only) -->
+          <div class="form-group register-only-field" id="confirmPassGroup">
+            <div class="input-wrapper">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input type="password" id="regConfirmPassword" class="form-input input-with-icon" placeholder="Confirm Password" data-i18n-placeholder="auth.confirm_password_placeholder">
+            </div>
+            <div id="confirmFeedback" class="password-feedback"></div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="authSubmitBtn" class="btn btn-primary btn-block btn-lg" style="margin-top: 14px;">
+            Sign Up
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <span id="authTogglePrompt">Already have an account? </span>
+          <a href="#" id="authModeToggle" style="font-weight: 600;">Login</a>
+        </div>
+      </div>
+
+      <!-- Right Photos Section (Screen 2) -->
+      <div class="auth-photos-wrap">
+        <div class="auth-photo-tile">
+          <img src="assets/images/farmer_portrait.jpg" alt="Smiling rural farmer in green crop field">
+        </div>
+        <div class="auth-photo-tile">
+          <img src="assets/images/potter_artisan.jpg" alt="Rural Indian woman shaping pottery on traditional wheel">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

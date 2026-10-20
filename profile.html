@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrepreneur Profile | UdyamSetu</title>
+  <meta name="description" content="View the profile, handcrafted products, and collaboration interests of rural entrepreneurs on UdyamSetu.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="profile-page-wrap">
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions populated by main.js -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search" data-i18n-title="common.search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Profile Banner (Screen 5) -->
+  <div class="profile-banner">
+    <img src="assets/images/crafts_banner.jpg" alt="Artisan workshop with handcrafted cane baskets, textiles, and pottery">
+  </div>
+
+  <!-- Profile Container -->
+  <main class="container" id="profileMainContainer">
+    <!-- Header Card Overlapping Banner -->
+    <div class="profile-header-card">
+      <div class="profile-header-row">
+        <div class="profile-avatar-row">
+          <div class="profile-avatar-large" id="profileAvatarLarge">
+            <img src="assets/images/artisan_asha.jpg" alt="Profile Avatar">
+          </div>
+          <div class="profile-name-area">
+            <div class="profile-name-row">
+              <h1 class="profile-main-name" id="profileMainName">Loading Profile...</h1>
+              <span class="badge badge-verified" id="profileVerifiedBadge" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span data-i18n="profile.verified">Verified</span>
+              </span>
+            </div>
+            <div class="profile-main-sub" id="profileMainSub">Rural Enterprise • India</div>
+            <p class="profile-quote" id="profileQuote">“Connecting rural enterprise to growing opportunities.”</p>
+          </div>
+        </div>
+
+        <!-- Action Buttons (Dynamic: Edit Profile for owner, Connect/Message for visitors) -->
+        <div class="profile-header-actions" id="profileHeaderActions">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Tabs (Screen 5) -->
+    <div class="tab-list" style="margin-bottom: 24px;">
+      <button class="tab-btn profile-tab-btn active" data-target="paneAbout" data-i18n="profile.about">About</button>
+      <button class="tab-btn profile-tab-btn" data-target="paneProducts" data-i18n="profile.products_offerings">Products</button>
+      <button class="tab-btn profile-tab-btn" data-target="paneCollabs" data-i18n="profile.looking_for">Collaboration Interests</button>
+      <button class="tab-btn profile-tab-btn" data-target="paneSocial" data-i18n="profile.contact_details">Social Links</button>
+    </div>
+
+    <!-- Content Grid (2 Columns) -->
+    <div class="profile-content-grid">
+      <!-- Left Column: Tab Panes -->
+      <div class="profile-tab-content">
+        <!-- Pane 1: About (Screen 5) -->
+        <div id="paneAbout" class="profile-tab-pane card">
+          <h2 style="font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--text-main);" data-i18n="profile.about">About Our Enterprise</h2>
+          <p id="profileAboutDesc" style="font-size: 14px; line-height: 1.6; color: var(--text-main); margin-bottom: 16px;">
+            Loading enterprise details...
+          </p>
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--text-main);" data-i18n="profile.our_story">Our Story & Vision</h3>
+          <p id="profileAboutStory" style="font-size: 13.5px; line-height: 1.6; color: var(--text-muted);">
+            Dedicated to local community growth and heritage craftsmanship.
+          </p>
+        </div>
+
+        <!-- Pane 2: Products -->
+        <div id="paneProducts" class="profile-tab-pane" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;" id="productsHeaderRow">
+            <h2 style="font-size: 16px; font-weight: 600;" data-i18n="profile.products_offerings">Products & Catalog</h2>
+            <button class="btn btn-primary btn-sm" id="btnAddProductBtn" style="display: none;" onclick="window.openAddProductModal()" data-i18n="profile.add_product">+ Add Product</button>
+          </div>
+          <div id="profileProductsGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Pane 3: Collaboration Interests -->
+        <div id="paneCollabs" class="profile-tab-pane card" style="display: none;">
+          <h2 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;" data-i18n="collab.title">Current Collaboration Priorities</h2>
+          <div id="profileCollabList" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Pane 4: Social Links -->
+        <div id="paneSocial" class="profile-tab-pane card" style="display: none;">
+          <h2 style="font-size: 15px; font-weight: 600; margin-bottom: 14px;" data-i18n="profile.contact_details">Contact & Online Presence</h2>
+          <div id="profileSocialList" style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Info Cards (Screen 5) -->
+      <aside class="profile-info-aside">
+        <!-- Location Widget -->
+        <div class="profile-info-widget">
+          <div class="profile-info-row">
+            <svg class="profile-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <div class="profile-info-text">
+              <h4 data-i18n="collab.form_location">Location</h4>
+              <p id="profileLocationText">India</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Looking for Widget -->
+        <div class="profile-info-widget">
+          <div class="profile-info-row">
+            <svg class="profile-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <div class="profile-info-text">
+              <h4 data-i18n="profile.looking_for">Looking for</h4>
+              <div id="profileLookingForList" style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

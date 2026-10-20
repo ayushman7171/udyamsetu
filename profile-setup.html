@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set Up Your Enterprise Profile | UdyamSetu</title>
+  <meta name="description" content="Set up your rural business profile on UdyamSetu to connect with partners and showcase your products.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .setup-container {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+    .setup-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      padding: 32px;
+    }
+    .setup-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      margin-bottom: 12px;
+    }
+    .setup-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+    .setup-header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin: 24px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .setup-card {
+        padding: 20px 16px;
+      }
+    }
+    .privacy-notice {
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--bg-cream-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="container">
+    <div class="setup-container">
+      <!-- Brand Header -->
+      <div style="text-align: center; margin-bottom: 24px;">
+        <a href="index.html" class="brand" style="justify-content: center;">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text" style="text-align: left;">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-header">
+          <span class="setup-badge" data-i18n="profile_setup.step_badge">Step 2: Profile Setup</span>
+          <h1 data-i18n="profile_setup.title">Set Up Your Business Profile</h1>
+          <p data-i18n="profile_setup.subtitle">Tell the community about your enterprise, location, and the partnerships you are looking for.</p>
+        </div>
+
+        <div id="setupAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px 14px; font-size: 13.5px; border-radius: 6px; margin-bottom: 16px;"></div>
+
+        <form id="profileSetupForm">
+          <!-- Section 1: Business Identity -->
+          <div class="form-section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            <span data-i18n="profile.enterprise">Enterprise Details</span>
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="setupBizName" data-i18n="profile_setup.biz_name">Business / Enterprise Name *</label>
+              <input type="text" id="setupBizName" class="form-input" placeholder="e.g. Asha Rural Handicrafts" data-i18n-placeholder="profile_setup.biz_name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="setupCategory" data-i18n="profile_setup.category">Category / Industry *</label>
+              <select id="setupCategory" class="form-select" required>
+                <option value="Handicrafts" data-i18n="categories.Handicrafts">Handicrafts</option>
+                <option value="Agriculture" data-i18n="categories.Agriculture">Agriculture</option>
+                <option value="Food Products" data-i18n="categories.Food Products">Food Products</option>
+                <option value="Organic Products" data-i18n="categories.Organic Products">Organic Products</option>
+                <option value="Digital Services" data-i18n="categories.Digital Services">Digital Services</option>
+                <option value="Textiles & Handlooms" data-i18n="categories.Textiles & Handlooms">Textiles & Handlooms</option>
+                <option value="General Enterprise" data-i18n="categories.General Enterprise" selected>General Enterprise</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setupQuote" data-i18n="profile_setup.quote">Tagline / Motto</label>
+            <input type="text" id="setupQuote" class="form-input" placeholder="e.g. Preserving traditional craftsmanship through local women empowerment." data-i18n-placeholder="profile_setup.quote">
+          </div>
+
+          <!-- Section 2: Location & Privacy -->
+          <div class="form-section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span data-i18n="profile_setup.location_details">Location Details</span>
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="setupState" data-i18n="profile_setup.state_ut">State / Union Territory *</label>
+              <select id="setupState" class="form-select" required>
+                <option value="" data-i18n="profile_setup.select_state">Select State</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="setupDistrict" data-i18n="profile_setup.district">District *</label>
+              <select id="setupDistrict" class="form-select" required disabled>
+                <option value="" data-i18n="profile_setup.select_district">Select District</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="setupTown" data-i18n="profile_setup.town">Village, Town, or City</label>
+              <input type="text" id="setupTown" class="form-input" placeholder="e.g. Wai or Rameshwar" data-i18n-placeholder="profile_setup.town">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="setupPincode" data-i18n="profile_setup.pincode">6-Digit PIN Code *</label>
+              <input type="text" id="setupPincode" class="form-input" placeholder="e.g. 412803" maxlength="6" pattern="[1-9][0-9]{5}" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setupLandmark" data-i18n="profile_setup.landmark">Business Address or Landmark (Private by Default)</label>
+            <input type="text" id="setupLandmark" class="form-input" placeholder="e.g. Ganpati Ali Farm Complex or Near Post Office" data-i18n-placeholder="profile_setup.landmark">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setupLocPref" data-i18n="profile_setup.loc_pref">Public Location Display Preference</label>
+            <select id="setupLocPref" class="form-select">
+              <option value="district_state" data-i18n="profile_setup.loc_pref_district" selected>District, State (e.g. Satara, Maharashtra - Recommended for Privacy)</option>
+              <option value="village_district_state" data-i18n="profile_setup.loc_pref_village">Village/Town, District, State (e.g. Wai, Satara, Maharashtra)</option>
+              <option value="state_only" data-i18n="profile_setup.loc_pref_state">State Only (e.g. Maharashtra)</option>
+            </select>
+          </div>
+
+          <div class="privacy-notice">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" style="flex-shrink: 0; margin-top: 1px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <div>
+              <strong data-i18n="profile_setup.privacy_title">Privacy Guarantee:</strong> <span data-i18n="profile_setup.privacy_desc">Detailed street addresses, landmarks, and PIN codes remain private. Only your chosen location preference will be visible on the public directory and marketplace.</span>
+            </div>
+          </div>
+
+          <!-- Section 3: Story & Collaboration Interests -->
+          <div class="form-section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span data-i18n="profile_setup.about_collab">About & Collaboration</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setupDesc" data-i18n="profile_setup.short_desc">Short Description</label>
+            <textarea id="setupDesc" class="form-textarea" rows="2" placeholder="Brief summary of your products and activities." data-i18n-placeholder="profile_setup.short_desc"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setupStory" data-i18n="profile_setup.full_story">Full Enterprise Story</label>
+            <textarea id="setupStory" class="form-textarea" rows="3" placeholder="How your business started, the community artisans involved, and your goals." data-i18n-placeholder="profile_setup.full_story"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="setupLookingFor" data-i18n="profile_setup.looking_for">Collaboration Priorities (comma-separated)</label>
+            <input type="text" id="setupLookingFor" class="form-input" placeholder="e.g. Eco packaging, Interstate distributors, E-commerce guidance" data-i18n-placeholder="profile_setup.looking_for">
+          </div>
+
+          <!-- Section 4: Contact -->
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="setupWebsite" data-i18n="profile_setup.website">Website (Optional)</label>
+              <input type="url" id="setupWebsite" class="form-input" placeholder="https://...">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="setupPhone" data-i18n="profile_setup.phone">Phone / WhatsApp (Optional)</label>
+              <input type="text" id="setupPhone" class="form-input" placeholder="+91 98765 43210">
+            </div>
+          </div>
+
+          <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 12px;">
+            <button type="submit" id="setupSubmitBtn" class="btn btn-primary btn-block btn-lg" data-i18n="profile_setup.submit_btn">
+              Save Enterprise Profile & Continue
+            </button>
+            <a href="dashboard.html" class="btn btn-outline btn-block btn-sm" style="text-align: center;" data-i18n="profile_setup.skip_btn">
+              Skip for now, go to Dashboard
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const stateSelect = document.getElementById("setupState");
+      const districtSelect = document.getElementById("setupDistrict");
+      const setupForm = document.getElementById("profileSetupForm");
+      const setupAlert = document.getElementById("setupAlert");
+      const submitBtn = document.getElementById("setupSubmitBtn");
+
+      let locationsData = {};
+
+      function populateStates() {
+        const curVal = stateSelect.value;
+        const defaultText = window.i18n ? window.i18n.t("profile_setup.select_state", "Select State") : "Select State";
+        stateSelect.innerHTML = `<option value="">${defaultText}</option>`;
+        const states = locationsData.states || Object.keys(locationsData).sort();
+        states.forEach(st => {
+          const opt = document.createElement("option");
+          opt.value = st;
+          opt.textContent = window.i18n ? window.i18n.t("states." + st, st) : st;
+          if (st === curVal) opt.selected = true;
+          stateSelect.appendChild(opt);
+        });
+      }
+
+      // Load Indian locations dataset
+      fetch("/api/locations")
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.locations) {
+            locationsData = data.locations;
+            populateStates();
+          }
+        })
+        .catch(() => {});
+
+      window.addEventListener("i18n:languageChanged", function () {
+        if (locationsData && Object.keys(locationsData).length > 0) {
+          populateStates();
+        }
+      });
+
+      stateSelect.addEventListener("change", function () {
+        const selectedState = stateSelect.value;
+        const defaultDist = window.i18n ? window.i18n.t("profile_setup.select_district", "Select District") : "Select District";
+        districtSelect.innerHTML = `<option value="">${defaultDist}</option>`;
+        if (selectedState && locationsData[selectedState]) {
+          locationsData[selectedState].forEach(dist => {
+            const opt = document.createElement("option");
+            opt.value = dist;
+            opt.textContent = dist;
+            districtSelect.appendChild(opt);
+          });
+          districtSelect.disabled = false;
+        } else {
+          districtSelect.disabled = true;
+        }
+      });
+
+      setupForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        setupAlert.style.display = "none";
+
+        const bizName = document.getElementById("setupBizName").value.trim();
+        const category = document.getElementById("setupCategory").value;
+        const quote = document.getElementById("setupQuote").value.trim();
+        const state = document.getElementById("setupState").value.trim();
+        const district = document.getElementById("setupDistrict").value.trim();
+        const town = document.getElementById("setupTown").value.trim();
+        const pincode = document.getElementById("setupPincode").value.trim();
+        const landmark = document.getElementById("setupLandmark").value.trim();
+        const pref = document.getElementById("setupLocPref").value;
+        const desc = document.getElementById("setupDesc").value.trim();
+        const story = document.getElementById("setupStory").value.trim();
+        const lookingFor = document.getElementById("setupLookingFor").value.trim();
+        const website = document.getElementById("setupWebsite").value.trim();
+        const phone = document.getElementById("setupPhone").value.trim();
+
+        if (pincode && !/^[1-9][0-9]{5}$/.test(pincode)) {
+          setupAlert.textContent = window.i18n ? window.i18n.t("profile_setup.pincode_invalid", "Please enter a valid 6-digit Indian PIN code.") : "Please enter a valid 6-digit Indian PIN code.";
+          setupAlert.style.display = "block";
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.saving", "Saving Profile...") : "Saving Profile...";
+
+        const payload = {
+          business_name: bizName,
+          category: category,
+          quote: quote,
+          state: state,
+          district: district,
+          subdistrict_or_town: town,
+          pincode: pincode,
+          address_landmark: landmark,
+          location_display_preference: pref,
+          description: desc,
+          full_story: story,
+          looking_for: lookingFor,
+          website: website,
+          phone: phone
+        };
+
+        fetch("/api/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+        .then(async r => {
+          const res = await r.json();
+          submitBtn.disabled = false;
+          submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.submit_btn", "Save Enterprise Profile & Continue") : "Save Enterprise Profile & Continue";
+
+          if (r.ok && res.success) {
+            showToast(window.i18n ? window.i18n.t("profile_setup.completed", "Enterprise profile setup completed!") : "Enterprise profile setup completed!");
+            setTimeout(() => {
+              window.location.href = "profile.html";
+            }, 800);
+          } else {
+            setupAlert.textContent = res.error || (window.i18n ? window.i18n.t("profile_setup.save_error", "Failed to save profile.") : "Failed to save profile.");
+            setupAlert.style.display = "block";
+          }
+        })
+        .catch(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.submit_btn", "Save Enterprise Profile & Continue") : "Save Enterprise Profile & Continue";
+          setupAlert.textContent = window.i18n ? window.i18n.t("profile_setup.network_error", "Network error. Please try again.") : "Network error. Please try again.";
+          setupAlert.style.display = "block";
+        });
+      });
+    });
+  </script>
+</body>
+</html>

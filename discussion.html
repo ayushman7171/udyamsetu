@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How do you find customers outside your district? | UdyamSetu</title>
+  <meta name="description" content="Discussion on reaching interstate customers for rural spice and agricultural enterprises.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link active" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search" data-i18n-title="common.search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Community Discussion View (Screen 8) -->
+  <main class="container">
+    <div class="discussion-page-wrap">
+      <!-- Back Link -->
+      <a href="dashboard.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span data-i18n="common.back">Back to Community</span>
+      </a>
+
+      <!-- Main Question Card (Screen 8) -->
+      <article class="discussion-main-card">
+        <div class="post-header">
+          <div class="post-user">
+            <div class="avatar-circle">
+              <img src="assets/images/ramesh_kumar.jpg" alt="Ramesh Kumar">
+            </div>
+            <div class="post-user-info">
+              <span class="post-author-name">Ramesh Kumar</span>
+              <div class="post-meta">
+                <span>Agriculture</span> • <span>Karnataka</span> • <span>3 hours ago</span>
+              </div>
+            </div>
+          </div>
+          <button class="header-icon-btn" title="Options" onclick="showToast('Discussion bookmarked.')">•••</button>
+        </div>
+
+        <h1 class="discussion-question-title">How do you find customers outside your district?</h1>
+        <p class="discussion-question-body">
+          We produce organic turmeric and other spices. Currently most of our sales are local. I would like to know how other rural entrepreneurs have reached customers in different states. Any advice or experiences would be really helpful!
+        </p>
+
+        <div style="margin-bottom: 16px;">
+          <span class="badge" style="background:#eef2ff; color:#4f46e5; font-weight:600;" data-i18n="disc.ask_question">Question</span>
+        </div>
+
+        <!-- Action Stats Bar (Screen 8) -->
+        <div class="post-actions-bar">
+          <div class="post-stats">
+            <button class="stat-item btn-like" onclick="window.toggleLike(this, 6)" data-count="6">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+              <span>6 Likes</span>
+            </button>
+            <span class="stat-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span id="discCommentsCount">8 Comments</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Comment Input Box (Screen 8) -->
+        <div class="comment-input-area">
+          <div class="avatar-circle">
+            <span>AS</span>
+          </div>
+          <div class="comment-box">
+            <textarea id="discussionCommentInput" class="form-textarea" rows="2" placeholder="Write a comment..." data-i18n-placeholder="dashboard.write_comment"></textarea>
+            <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+              <button id="postCommentBtn" class="btn btn-primary btn-sm" data-i18n="dashboard.submit_comment">Post</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Comments Thread -->
+      <section class="comments-thread" id="commentsThread">
+        <!-- Reply 1: Asha Devi -->
+        <div class="comment-item">
+          <div class="avatar-circle" style="width: 36px; height: 36px;">
+            <img src="assets/images/artisan_asha.jpg" alt="Asha Devi">
+          </div>
+          <div class="comment-body-area">
+            <div class="comment-header">
+              <span class="comment-author">Asha Devi</span>
+              <span class="comment-time">2 hours ago</span>
+            </div>
+            <p class="comment-text">
+              Namaste Ramesh ji. We faced the exact same barrier when expanding our handloom bags! What unlocked interstate buyers was participating in state government SARAS artisan melas in state capitals, plus registering with India Post Business Parcel service for reliable and cheap parcel transit.
+            </p>
+          </div>
+        </div>
+
+        <!-- Reply 2: Rahul Sharma -->
+        <div class="comment-item">
+          <div class="avatar-circle" style="width: 36px; height: 36px;">
+            <img src="assets/images/digital_rahul.jpg" alt="Rahul Sharma">
+          </div>
+          <div class="comment-body-area">
+            <div class="comment-header">
+              <span class="comment-author">Rahul Sharma</span>
+              <span class="comment-time">1 hour ago</span>
+            </div>
+            <p class="comment-text">
+              Setting up a WhatsApp Business catalog with direct UPI payment links is step one. Also, look into ONDC (Open Network for Digital Commerce) through seller apps like Mystore. It connects your turmeric directly to buyers in Delhi and Mumbai with zero commission overhead.
+            </p>
+          </div>
+        </div>
+
+        <!-- Reply 3: Meera Patil -->
+        <div class="comment-item">
+          <div class="avatar-circle" style="width: 36px; height: 36px;">
+            <img src="assets/images/meera_patil.jpg" alt="Meera Patil">
+          </div>
+          <div class="comment-body-area">
+            <div class="comment-header">
+              <span class="comment-author">Meera Patil</span>
+              <span class="comment-time">35 mins ago</span>
+            </div>
+            <p class="comment-text">
+              Try sending sample sampler packages of your organic turmeric directly to organic grocery owners in Pune and Bengaluru. Once they test the curcumin color and aroma in tea and curries, they will order 50kg bags on a monthly cycle.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

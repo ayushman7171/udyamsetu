@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn & Share | UdyamSetu</title>
+  <meta name="description" content="Real experiences, practical tips and useful resources from fellow rural entrepreneurs.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="learn.html" class="nav-link active" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search" data-i18n-title="common.search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Learn & Share Main Content (Screen 9) -->
+  <main class="container">
+    <div class="learn-header">
+      <h1 class="learn-title" data-i18n="learn.title">Learn & Share</h1>
+      <p class="learn-sub" data-i18n="learn.subtitle">Real experiences, practical tips and useful resources from fellow entrepreneurs.</p>
+    </div>
+
+    <!-- Category Pills (Screen 9) -->
+    <div class="pill-list">
+      <button class="pill-btn learn-pill-btn active" data-category="All" data-i18n="common.all">All</button>
+      <button class="pill-btn learn-pill-btn" data-category="Business Tips" data-i18n="learn.category_tips">Business Tips</button>
+      <button class="pill-btn learn-pill-btn" data-category="Success Stories" data-i18n="learn.category_stories">Success Stories</button>
+      <button class="pill-btn learn-pill-btn" data-category="How-To Guides" data-i18n="learn.category_guides">How-To Guides</button>
+      <button class="pill-btn learn-pill-btn" data-category="Industry Insights" data-i18n="learn.category_insights">Industry Insights</button>
+    </div>
+
+    <!-- Articles Grid (Screen 9) -->
+    <div id="articlesGrid" class="articles-grid">
+      <!-- Article 1: Meera Patil -->
+      <div class="article-card" onclick="window.readArticle('art-1')">
+        <div class="article-thumb">
+          <img src="assets/images/packaging_spices.jpg" alt="How we expanded our customer base through online marketplaces">
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">How we expanded our customer base through online marketplaces</h2>
+          <div class="article-author-row">
+            <div class="avatar-circle" style="width: 32px; height: 32px;">
+              <img src="assets/images/meera_patil.jpg" alt="Meera Patil">
+            </div>
+            <div class="article-author-meta">
+              <span class="article-author-name">Meera Patil</span>
+              <div class="article-date-row">
+                <span>Food Products</span> • <span>June 10, 2024</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 2: Rahul Sharma -->
+      <div class="article-card" onclick="window.readArticle('art-2')">
+        <div class="article-thumb">
+          <img src="assets/images/phone_photography.jpg" alt="Simple ways to take better product photos using your phone">
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">Simple ways to take better product photos using your phone</h2>
+          <div class="article-author-row">
+            <div class="avatar-circle" style="width: 32px; height: 32px;">
+              <img src="assets/images/digital_rahul.jpg" alt="Rahul Sharma">
+            </div>
+            <div class="article-author-meta">
+              <span class="article-author-name">Rahul Sharma</span>
+              <div class="article-date-row">
+                <span>Digital Services</span> • <span>June 8, 2024</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 3: Asha Devi -->
+      <div class="article-card" onclick="window.readArticle('art-3')">
+        <div class="article-thumb">
+          <img src="assets/images/village_journey.jpg" alt="Our journey from a small village business to national markets">
+        </div>
+        <div class="article-body">
+          <h2 class="article-title">Our journey from a small village business to national markets</h2>
+          <div class="article-author-row">
+            <div class="avatar-circle" style="width: 32px; height: 32px;">
+              <img src="assets/images/artisan_asha.jpg" alt="Asha Devi">
+            </div>
+            <div class="article-author-meta">
+              <span class="article-author-name">Asha Devi</span>
+              <div class="article-date-row">
+                <span>Handicrafts</span> • <span>June 5, 2024</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

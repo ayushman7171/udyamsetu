@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard & Community Feed | UdyamSetu</title>
+  <meta name="description" content="Engage with rural entrepreneurs, share updates, discover collaboration opportunities and discuss ideas.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <!-- Logo -->
+        <a href="index.html" class="brand">
+          <svg class="brand-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C18 4 9 10 9 19C9 24.5 13 29 18 31C23 29 27 24.5 27 19C27 10 18 4 18 4Z" fill="#2E7D32" opacity="0.85"/>
+            <path d="M18 8C18 8 12 13 12 20C12 23.5 14.5 26.5 18 28C21.5 26.5 24 23.5 24 20C24 13 18 8 18 8Z" fill="#18639C"/>
+            <path d="M18 12V24M14 18H22" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">UdyamSetu</span>
+            <span class="brand-tagline">Rural Entrepreneurs, Stronger Together.</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav>
+          <ul class="nav-menu">
+            <li><a href="dashboard.html" class="nav-link active" data-i18n="nav.home">Home</a></li>
+            <li><a href="directory.html" class="nav-link" data-i18n="nav.discover">Discover</a></li>
+            <li><a href="discussion.html" class="nav-link" data-i18n="nav.community">Community</a></li>
+            <li><a href="collaborations.html" class="nav-link" data-i18n="nav.collaborations">Collaborations</a></li>
+            <li><a href="learn.html" class="nav-link" data-i18n="nav.learn">Learn</a></li>
+          </ul>
+        </nav>
+
+        <!-- Dynamic Header Actions -->
+        <div class="header-actions" id="globalHeaderActions">
+          <a href="directory.html" class="header-icon-btn" title="Search" data-i18n-title="common.search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard 3-Column Layout (Screen 3) -->
+  <main class="container">
+    <div class="dashboard-layout">
+      <!-- Left Sidebar Nav -->
+      <aside class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span data-i18n="nav.home">Home</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span data-i18n="nav.my_profile">My Profile</span>
+        </a>
+        <a href="discussion.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span data-i18n="nav.community">Community</span>
+        </a>
+        <a href="collaborations.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          <span data-i18n="nav.collaborations">Collaborations</span>
+        </a>
+        <a href="learn.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+          <span data-i18n="nav.learn">Guides & Learning</span>
+        </a>
+        <a href="#" class="sidebar-link btn-logout-link" id="sidebarLogoutBtn" style="color: #ef4444; margin-top: 16px;" onclick="window.handleLogout(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span data-i18n="nav.logout">Logout</span>
+        </a>
+      </aside>
+
+      <!-- Center Community Feed -->
+      <section class="main-feed-area">
+        <!-- Share Box -->
+        <div class="share-box">
+          <div class="share-box-top">
+            <div class="avatar-circle" id="dashboardUserAvatar">
+              <span>AS</span>
+            </div>
+            <input type="text" id="shareInput" class="share-input" placeholder="Share an update, ask a question or post an opportunity..." data-i18n-placeholder="dashboard.post_placeholder">
+          </div>
+          <div class="share-box-actions">
+            <div class="share-quick-btns">
+              <button class="share-tool-btn" type="button" onclick="showToast('Upload photo feature ready!')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                <span data-i18n="dashboard.photo">Photo</span>
+              </button>
+              <a href="create-collaboration.html" class="share-tool-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                <span data-i18n="collab.opportunity_type">Opportunity</span>
+              </a>
+              <a href="discussion.html" class="share-tool-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span data-i18n="disc.ask_question">Question</span>
+              </a>
+            </div>
+            <button id="sharePostBtn" class="btn btn-primary btn-sm" data-i18n="dashboard.publish_post">Post</button>
+          </div>
+        </div>
+
+        <!-- Feed Filter Tabs -->
+        <div class="tab-list">
+          <button class="tab-btn feed-tab-btn active" data-filter="all" data-i18n="common.all">All Posts</button>
+          <button class="tab-btn feed-tab-btn" data-filter="opportunity" data-i18n="collab.title">Opportunities</button>
+          <button class="tab-btn feed-tab-btn" data-filter="question" data-i18n="disc.title">Questions</button>
+          <button class="tab-btn feed-tab-btn" data-filter="story" data-i18n="profile.our_story">Success Stories</button>
+        </div>
+
+        <!-- Posts List -->
+        <div id="postsFeed">
+          <!-- Populated from SQLite -->
+        </div>
+      </section>
+
+      <!-- Right Sidebar (Suggested Entrepreneurs - Screen 3) -->
+      <aside class="suggested-sidebar">
+        <div class="suggested-widget">
+          <div class="suggested-header">
+            <span class="suggested-title" data-i18n="directory.title">Suggested Entrepreneurs</span>
+            <a href="directory.html" style="font-size: 12px; font-weight: 500;" data-i18n="notif.view_all">View all</a>
+          </div>
+          <div class="suggested-list" id="suggestedList">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <!-- Supabase Client SDK & Configuration (Vercel & Static Ready) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/supabase-api.js"></script>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
