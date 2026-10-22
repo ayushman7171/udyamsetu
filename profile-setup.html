@@ -324,6 +324,7 @@
   <script src="js/data.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/locations-data.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const stateSelect = document.getElementById("setupState");
@@ -395,43 +396,50 @@
         });
       }
 
-      function loadLocations() {
-        if (locationsLoadedPromise) {
-          return locationsLoadedPromise;
-        }
+      
+function loadLocations() {
+  if (locationsLoadedPromise) {
+    return locationsLoadedPromise;
+  }
 
-        locationsLoadedPromise = fetch("/api/locations")
-          .then(async response => {
-            if (!response.ok) {
-              throw new Error(`Failed to load locations: HTTP ${response.status}`);
-            }
-            const data = await response.json();
-            if (!data || !data.locations) {
-              throw new Error("Invalid locations data format");
-            }
-            locationsMap = data.locations;
-            const statesList = data.states || Object.keys(locationsMap).sort();
-            populateStates(statesList);
-            return locationsMap;
-          })
-          .catch(error => {
-            locationsLoadedPromise = null; // Allow retry
-            const defaultText = window.i18n ? window.i18n.t("profile_setup.select_state", "Select State") : "Select State";
-            stateSelect.innerHTML = `<option value="">${defaultText} (Unavailable)</option>`;
-            stateSelect.disabled = true;
-            districtSelect.innerHTML = `<option value="">Select District</option>`;
-            districtSelect.disabled = true;
+  locationsLoadedPromise = Promise.resolve().then(() => {
+    const data = window.INDIAN_LOCATIONS;
 
-            // Handle loading failure visibly rather than silently swallowing errors
-            setupAlert.textContent = window.i18n
-              ? window.i18n.t("profile_setup.locations_load_error", "Failed to load location options. Please check your network and refresh.")
-              : "Failed to load location options. Please check your network and refresh.";
-            setupAlert.style.display = "block";
-            throw error;
-          });
+    if (!data || Object.keys(data).length === 0) {
+      throw new Error("Static location data is unavailable");
+    }
 
-        return locationsLoadedPromise;
-      }
+    locationsMap = data;
+    populateStates(Object.keys(locationsMap).sort());
+
+    setupAlert.style.display = "none";
+    return locationsMap;
+  }).catch(error => {
+    locationsLoadedPromise = null;
+
+    const defaultText = window.i18n
+      ? window.i18n.t("profile_setup.select_state", "Select State")
+      : "Select State";
+
+    stateSelect.innerHTML =
+      `<option value="">${defaultText} (Unavailable)</option>`;
+    stateSelect.disabled = true;
+    districtSelect.disabled = true;
+
+    setupAlert.textContent = window.i18n
+      ? window.i18n.t(
+          "profile_setup.locations_load_error",
+          "Failed to load location options. Please refresh."
+        )
+      : "Failed to load location options. Please refresh.";
+
+    setupAlert.style.display = "block";
+    throw error;
+  });
+
+  return locationsLoadedPromise;
+}
+
 
       // Initial load of Indian locations dataset
       loadLocations().catch(() => {});
