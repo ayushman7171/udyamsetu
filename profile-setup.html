@@ -380,7 +380,9 @@
       // -----------------------------------------------------------------------
       function populateStates(statesList) {
         const curVal = stateSelect.value;
-        const defaultText = window.i18n ? window.i18n.t("profile_setup.select_state", "Select State") : "Select State";
+        const defaultText = window.i18n
+  ? window.i18n.t("profile_setup.select_state", {}, "Select State")
+  : "Select State";
         stateSelect.innerHTML = `<option value="">${defaultText}</option>`;
         stateSelect.disabled = false;
 
@@ -388,7 +390,9 @@
         states.forEach(st => {
           const opt = document.createElement("option");
           opt.value = st;
-          opt.textContent = window.i18n ? window.i18n.t("states." + st, st) : st;
+          opt.textContent = window.i18n
+  ? window.i18n.t("states." + st, {}, st)
+  : st;
           if (curVal && st.toLowerCase() === curVal.toLowerCase()) {
             opt.selected = true;
           }
@@ -429,7 +433,8 @@ function loadLocations() {
     setupAlert.textContent = window.i18n
       ? window.i18n.t(
           "profile_setup.locations_load_error",
-          "Failed to load location options. Please refresh."
+{},
+"Failed to load location options. Please refresh."
         )
       : "Failed to load location options. Please refresh.";
 
