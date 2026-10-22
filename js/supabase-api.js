@@ -147,6 +147,7 @@ window.UdyamAPI = {
     return (data || []).map(p => {
       const author = p.author || {};
       const likes = p.post_likes || [];
+      const userLiked = curUid ? likes.some(l => l.user_id === curUid) : false;
       return {
         id: p.id,
         author_id: p.author_id,
@@ -157,10 +158,21 @@ window.UdyamAPI = {
         content: p.content,
         post_type: p.post_type,
         tag: p.tag,
-        likes: p.likes_count,
-        comments_count: p.comments_count,
+        likes: p.likes_count || likes.length || 0,
+        likes_count: p.likes_count || likes.length || 0,
+        comments_count: (() => {
+          let cc = p.comments_count || 0;
+          if (typeof localStorage !== "undefined") {
+            try {
+              const cached = JSON.parse(localStorage.getItem(`udyam_post_comments_${p.id}`) || "[]");
+              if (Array.isArray(cached) && cached.length > cc) cc = cached.length;
+            } catch (_) {}
+          }
+          return cc;
+        })(),
         created_at: p.created_at,
-        is_liked: curUid ? likes.some(l => l.user_id === curUid) : false
+        is_liked: userLiked,
+        has_liked: userLiked
       };
     });
   },
@@ -185,33 +197,224 @@ window.UdyamAPI = {
   },
 
   async togglePostLike(postId) {
+    if (!window.supabaseClient || !window.UdyamAuth) {
+      // Fallback to local Flask endpoint if running locally
+      try {
+        const resp = await fetch(`/api/posts/${postId}/like`, { method: "POST" });
+        if (resp.ok) return await resp.json();
+      } catch (_) {}
+      throw new Error("Supabase client is not available");
+    }
+
     const curUser = await window.UdyamAuth.getUser();
     if (!curUser) throw new Error("Authentication required");
 
     // Check existing like
-    const { data: existing } = await window.supabaseClient
+    const { data: existing, error: checkErr } = await window.supabaseClient
       .from("post_likes")
       .select("id")
       .eq("post_id", postId)
       .eq("user_id", curUser.id)
       .maybeSingle();
 
+    if (checkErr) {
+      console.warn("post_likes check error:", checkErr);
+      try {
+        const resp = await fetch(`/api/posts/${postId}/like`, { method: "POST" });
+        if (resp.ok) return await resp.json();
+      } catch (_) {}
+      throw checkErr;
+    }
+
+    let liked = false;
     if (existing) {
-      await window.supabaseClient
+      const { error: delErr } = await window.supabaseClient
         .from("post_likes")
         .delete()
         .eq("post_id", postId)
         .eq("user_id", curUser.id);
-      return { liked: false };
+      if (delErr) throw delErr;
+      liked = false;
     } else {
-      await window.supabaseClient
+      const { error: insErr } = await window.supabaseClient
         .from("post_likes")
         .insert({
           post_id: postId,
           user_id: curUser.id
         });
-      return { liked: true };
+      if (insErr) throw insErr;
+      liked = true;
     }
+
+    // Query accurate count
+    let currentLikes = null;
+    try {
+      const { count, error: countErr } = await window.supabaseClient
+        .from("post_likes")
+        .select("id", { count: "exact", head: true })
+        .eq("post_id", postId);
+      if (!countErr && typeof count === "number") {
+        currentLikes = count;
+      }
+    } catch (_) {}
+
+    if (currentLikes === null) {
+      const { data: postData } = await window.supabaseClient
+        .from("posts")
+        .select("likes_count")
+        .eq("id", postId)
+        .maybeSingle();
+      if (postData && typeof postData.likes_count === "number") {
+        currentLikes = postData.likes_count;
+      }
+    }
+
+    return { success: true, liked: liked, likes: currentLikes };
+  },
+
+  async getPostComments(postId) {
+    if (!postId) return [];
+
+    // 1. Try querying post_comments table in Supabase
+    if (window.supabaseClient) {
+      try {
+        const { data, error } = await window.supabaseClient
+          .from("post_comments")
+          .select(`
+            id,
+            post_id,
+            text,
+            created_at,
+            author:profiles(id, name, avatar)
+          `)
+          .eq("post_id", postId)
+          .order("created_at", { ascending: true });
+
+        if (!error && Array.isArray(data)) {
+          return data.map(c => ({
+            id: c.id,
+            post_id: c.post_id,
+            text: c.text,
+            created_at: c.created_at,
+            author_name: c.author?.name || "Member",
+            author_avatar: c.author?.avatar || "assets/images/digital_rahul.jpg"
+          }));
+        }
+      } catch (err) {
+        console.warn("Could not query post_comments from Supabase:", err);
+      }
+    }
+
+    // 2. Fallback to localStorage cache
+    if (typeof localStorage !== "undefined") {
+      try {
+        const cached = localStorage.getItem(`udyam_post_comments_${postId}`);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (_) {}
+    }
+
+    // 3. Fallback to local Flask API if running
+    try {
+      const r = await fetch(`/api/posts/${postId}/comments`);
+      if (r.ok) {
+        const res = await r.json();
+        if (res && Array.isArray(res.comments)) return res.comments;
+      }
+    } catch (_) {}
+
+    return [];
+  },
+
+  async createPostComment(postId, text) {
+    const curUser = window.UdyamAuth ? await window.UdyamAuth.getUser() : null;
+    if (!curUser) throw new Error("Authentication required. Please log in.");
+    const cleanText = (text || "").trim();
+    if (!cleanText) throw new Error("Please write a comment first.");
+
+    let commentData = null;
+
+    // 1. Try Supabase post_comments table
+    if (window.supabaseClient) {
+      try {
+        const { data, error } = await window.supabaseClient
+          .from("post_comments")
+          .insert({
+            post_id: postId,
+            author_id: curUser.id,
+            text: cleanText
+          })
+          .select(`
+            id,
+            post_id,
+            text,
+            created_at,
+            author:profiles(id, name, avatar)
+          `)
+          .single();
+
+        if (!error && data) {
+          commentData = {
+            id: data.id,
+            post_id: data.post_id,
+            text: data.text,
+            created_at: data.created_at,
+            author_name: data.author?.name || curUser.user_metadata?.name || curUser.email?.split("@")[0] || "You",
+            author_avatar: data.author?.avatar || curUser.user_metadata?.avatar || "assets/images/digital_rahul.jpg"
+          };
+        }
+      } catch (err) {
+        console.warn("Supabase post_comments insert failed:", err);
+      }
+    }
+
+    // 2. Fallback if post_comments table not yet available on Supabase
+    if (!commentData) {
+      let authorName = curUser.user_metadata?.name || curUser.email?.split("@")[0] || "You";
+      let authorAvatar = curUser.user_metadata?.avatar || "assets/images/digital_rahul.jpg";
+
+      if (window.UdyamAuth && typeof window.UdyamAuth.getProfile === "function") {
+        try {
+          const prof = await window.UdyamAuth.getProfile(curUser.id);
+          if (prof) {
+            authorName = prof.name || authorName;
+            authorAvatar = prof.avatar || authorAvatar;
+          }
+        } catch (_) {}
+      }
+
+      commentData = {
+        id: Date.now(),
+        post_id: postId,
+        text: cleanText,
+        created_at: new Date().toISOString(),
+        author_name: authorName,
+        author_avatar: authorAvatar
+      };
+
+      // Also try Flask endpoint if running locally
+      try {
+        await fetch(`/api/posts/${postId}/comments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: cleanText })
+        });
+      } catch (_) {}
+    }
+
+    // 3. Always store in localStorage so comments persist across reloads
+    if (typeof localStorage !== "undefined") {
+      try {
+        const key = `udyam_post_comments_${postId}`;
+        const existing = JSON.parse(localStorage.getItem(key) || "[]");
+        existing.push(commentData);
+        localStorage.setItem(key, JSON.stringify(existing));
+      } catch (_) {}
+    }
+
+    return commentData;
   },
 
   // ---------------------------------------------------------------------------

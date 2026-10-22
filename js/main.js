@@ -1139,118 +1139,78 @@ function initDashboardFeed() {
 
   if (!postsFeed) return;
 
-  function loadFeed(filter = "all") {
-    fetch(`/api/feed?type=${filter}`)
-      .then(res => res.json())
-      .then(posts => {
-        if (!posts || posts.length === 0) {
-          const noPostsText = window.i18n ? window.i18n.t("dashboard.no_posts", {}, "No posts available yet. Be the first to share an update!") : "No posts available yet. Be the first to share an update!";
-          postsFeed.innerHTML = `
-            <div class="card" style="text-align: center; padding: 40px;">
-              <p style="color: var(--text-muted); font-size: 14.5px;">${escapeHtml(noPostsText)}</p>
-            </div>
-          `;
-          return;
+  async function loadFeed(filter = "all") {
+    let posts = [];
+
+    // 1. Prioritize Supabase (primary database on Vercel)
+    if (window.UdyamAPI && window.supabaseClient) {
+      try {
+        const spPosts = await window.UdyamAPI.getFeedPosts();
+        if (spPosts && spPosts.length > 0) {
+          posts = filter === "all" ? spPosts : spPosts.filter(p => p.post_type === filter);
         }
+      } catch (spErr) {
+        console.warn("Supabase feed fetch failed, checking local API:", spErr);
+      }
+    }
 
-        const tConnect = window.i18n ? window.i18n.t("directory.connect", {}, "Connect") : "Connect";
-        const tLike = window.i18n ? window.i18n.t("dashboard.like", {}, "Likes") : "Likes";
-        const tComments = window.i18n ? window.i18n.t("dashboard.comments", {}, "Comments") : "Comments";
-
-        postsFeed.innerHTML = posts.map(p => {
-          const catDisplay = window.i18n ? window.i18n.t("categories." + p.author_category, {}, p.author_category) : p.author_category;
-          const locDisplay = window.i18n ? window.i18n.localizeLocation(p.author_location) : p.author_location;
-          const timeDisplay = formatTimeAgo(p.created_at);
-          const tagDisplay = p.post_type === 'opportunity'
-            ? (window.i18n ? window.i18n.t('collab.opportunity_type', {}, 'Collaboration Opportunity') : 'Collaboration Opportunity')
-            : (p.post_type === 'question' ? (window.i18n ? window.i18n.t('disc.ask_question', {}, 'Question') : 'Question') : (window.i18n ? window.i18n.t('profile.our_story', {}, 'Success Story') : 'Success Story'));
-
-          return `
-          <div class="post-card" data-post-type="${escapeHtml(p.post_type)}">
-            <div class="post-header">
-              <div class="post-user">
-                <div class="avatar-circle">
-                  <img src="${p.author_avatar || 'assets/images/digital_rahul.jpg'}" alt="${escapeHtml(p.author_name)}">
-                </div>
-                <div class="post-user-info">
-                  <span class="post-author-name">${escapeHtml(p.author_name)}</span>
-                  <div class="post-meta">
-                    <span>${escapeHtml(catDisplay)}</span> • <span>${escapeHtml(locDisplay)}</span> • <span>${escapeHtml(timeDisplay)}</span>
-                  </div>
-                </div>
-              </div>
-              <button class="header-icon-btn" title="Options" onclick="showToast('Post bookmarked.')">•••</button>
-            </div>
-            <p class="post-content">${escapeHtml(p.content)}</p>
-            <div class="ugc-post-translate" data-post-id="${p.id}"></div>
-            <div class="post-tags">
-              <span class="badge ${p.post_type === 'opportunity' ? 'badge-category' : 'badge-tag'}">${escapeHtml(tagDisplay)}</span>
-              ${p.tag ? `<span class="badge badge-tag">${escapeHtml(p.tag)}</span>` : ''}
-            </div>
-            <div class="post-actions-bar">
-              <div class="post-stats">
-                <button class="stat-item btn-like ${p.has_liked ? 'active' : ''}" onclick="window.toggleLike(this, ${p.likes || 0}, ${p.id})" data-count="${p.likes || 0}" style="${p.has_liked ? 'color: var(--primary);' : ''}">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="${p.has_liked ? 'var(--primary)' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-                  <span>${p.likes || 0} ${escapeHtml(tLike)}</span>
-                </button>
-                <a href="${p.post_type === 'opportunity' ? 'collaborations.html' : 'discussion.html'}" class="stat-item">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                  <span>${p.comments_count || 0} ${escapeHtml(tComments)}</span>
-                </a>
-              </div>
-              ${window.CURRENT_USER && window.CURRENT_USER.id !== p.author_id ? `
-                <button class="btn btn-outline btn-sm btn-connect" data-user-id="${escapeHtml(p.author_id)}">${escapeHtml(tConnect)}</button>
-              ` : ''}
-            </div>
-          </div>
-        `;
-        }).join("");
-
-        // Wire up UGC translation toggles for community posts
-        posts.forEach(p => {
-          const container = postsFeed.querySelector(`.ugc-post-translate[data-post-id="${p.id}"]`);
-          if (container && window.i18n) {
-            window.i18n.setupUGCTranslateToggle(container, p.content, "auto");
+    // 2. Fallback to local Flask API if running locally and Supabase has no posts
+    if (posts.length === 0) {
+      try {
+        const res = await fetch(`/api/feed?type=${filter}`);
+        if (res.ok) {
+          const apiPosts = await res.json();
+          if (Array.isArray(apiPosts) && apiPosts.length > 0) {
+            posts = apiPosts;
           }
-        });
-      })
-      .catch(async () => {
-        let fallbackPosts = [];
-        if (window.UdyamAPI && window.supabaseClient) {
-          try {
-            const spPosts = await window.UdyamAPI.getFeedPosts();
-            if (spPosts && spPosts.length > 0) {
-              fallbackPosts = filter === "all" ? spPosts : spPosts.filter(p => p.post_type === filter);
-            }
-          } catch (_) {}
         }
-        if (fallbackPosts.length === 0 && window.UDYAM_DATA && Array.isArray(window.UDYAM_DATA.feedPosts)) {
-          fallbackPosts = window.UDYAM_DATA.feedPosts.map(p => ({
-            id: p.id,
-            author_id: p.authorId || "asha-devi",
-            author_name: p.author || "Asha Devi",
-            author_category: p.category || "Handicrafts",
-            author_location: p.location || "Uttar Pradesh",
-            author_avatar: p.avatar || "assets/images/artisan_asha.jpg",
-            content: p.content,
-            post_type: p.type || "story",
-            tag: p.tag || "",
-            likes: p.likes || 0,
-            comments_count: p.commentsCount || 0,
-            created_at: p.time || new Date().toISOString()
-          }));
-          if (filter !== "all") fallbackPosts = fallbackPosts.filter(p => p.post_type === filter);
-        }
-        if (fallbackPosts.length > 0) {
-          renderFeedPosts(fallbackPosts);
-        }
-      });
+      } catch (_) {}
+    }
+
+    // 3. Fallback to mock data if needed
+    if (posts.length === 0 && window.UDYAM_DATA && Array.isArray(window.UDYAM_DATA.feedPosts)) {
+      posts = window.UDYAM_DATA.feedPosts.map(p => ({
+        id: p.id,
+        author_id: p.authorId || "asha-devi",
+        author_name: p.author || "Asha Devi",
+        author_category: p.category || "Handicrafts",
+        author_location: p.location || "Uttar Pradesh",
+        author_avatar: p.avatar || "assets/images/artisan_asha.jpg",
+        content: p.content,
+        post_type: p.type || "story",
+        tag: p.tag || "",
+        likes: p.likes || 0,
+        likes_count: p.likes || 0,
+        comments_count: p.commentsCount || 0,
+        is_liked: false,
+        has_liked: false,
+        created_at: p.time || new Date().toISOString()
+      }));
+      if (filter !== "all") posts = posts.filter(p => p.post_type === filter);
+    }
+
+    renderFeedPosts(posts);
   }
 
   function renderFeedPosts(posts) {
+    if (!posts || posts.length === 0) {
+      const noPostsText = window.i18n ? window.i18n.t("dashboard.no_posts", {}, "No posts available yet. Be the first to share an update!") : "No posts available yet. Be the first to share an update!";
+      postsFeed.innerHTML = `
+        <div class="card" style="text-align: center; padding: 40px;">
+          <p style="color: var(--text-muted); font-size: 14.5px;">${escapeHtml(noPostsText)}</p>
+        </div>
+      `;
+      return;
+    }
+
     const tConnect = window.i18n ? window.i18n.t("directory.connect", {}, "Connect") : "Connect";
     const tLike = window.i18n ? window.i18n.t("dashboard.like", {}, "Likes") : "Likes";
     const tComments = window.i18n ? window.i18n.t("dashboard.comments", {}, "Comments") : "Comments";
+    const tWriteComment = window.i18n ? window.i18n.t("dashboard.write_comment", {}, "Write a comment...") : "Write a comment...";
+    const tPostBtn = window.i18n ? window.i18n.t("dashboard.publish_post", {}, "Post") : "Post";
+
+    const curUser = window.CURRENT_USER;
+    const curAvatar = curUser?.avatar || "assets/images/digital_rahul.jpg";
 
     postsFeed.innerHTML = posts.map(p => {
       const catDisplay = window.i18n ? window.i18n.t("categories." + p.author_category, {}, p.author_category) : p.author_category;
@@ -1260,8 +1220,12 @@ function initDashboardFeed() {
         ? (window.i18n ? window.i18n.t('collab.opportunity_type', {}, 'Collaboration Opportunity') : 'Collaboration Opportunity')
         : (p.post_type === 'question' ? (window.i18n ? window.i18n.t('disc.ask_question', {}, 'Question') : 'Question') : (window.i18n ? window.i18n.t('profile.our_story', {}, 'Success Story') : 'Success Story'));
 
+      const hasLiked = !!(p.has_liked || p.is_liked);
+      const likesCount = p.likes ?? p.likes_count ?? 0;
+      const commentsCount = p.comments_count ?? p.commentsCount ?? 0;
+
       return `
-      <div class="post-card" data-post-type="${escapeHtml(p.post_type)}">
+      <div class="post-card" data-post-id="${p.id}" data-post-type="${escapeHtml(p.post_type)}">
         <div class="post-header">
           <div class="post-user">
             <div class="avatar-circle">
@@ -1284,22 +1248,46 @@ function initDashboardFeed() {
         </div>
         <div class="post-actions-bar">
           <div class="post-stats">
-            <button class="stat-item btn-like ${p.has_liked ? 'active' : ''}" onclick="window.toggleLike(this, ${p.likes || 0}, ${p.id})" data-count="${p.likes || 0}" style="${p.has_liked ? 'color: var(--primary);' : ''}">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="${p.has_liked ? 'var(--primary)' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-              <span>${p.likes || 0} ${escapeHtml(tLike)}</span>
+            <button type="button" class="stat-item btn-like ${hasLiked ? 'active' : ''}" onclick="window.toggleLike(this, ${likesCount}, ${p.id}, event)" data-count="${likesCount}" style="${hasLiked ? 'color: var(--primary);' : ''}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="${hasLiked ? 'var(--primary)' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+              <span>${likesCount} ${escapeHtml(tLike)}</span>
             </button>
-            <a href="${p.post_type === 'opportunity' ? 'collaborations.html' : 'discussion.html'}" class="stat-item">
+            <button type="button" class="stat-item btn-comment" data-post-id="${p.id}" onclick="window.togglePostComments(${p.id}, event)" style="background: none; border: none; cursor: pointer; font: inherit;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              <span>${p.comments_count || 0} ${escapeHtml(tComments)}</span>
-            </a>
+              <span class="comment-count-text">${commentsCount} ${escapeHtml(tComments)}</span>
+            </button>
           </div>
           ${window.CURRENT_USER && window.CURRENT_USER.id !== p.author_id ? `
             <button class="btn btn-outline btn-sm btn-connect" data-user-id="${escapeHtml(p.author_id)}">${escapeHtml(tConnect)}</button>
           ` : ''}
         </div>
+
+        <!-- Post Comments Section (Collapsible) -->
+        <div class="post-comments-section" id="postCommentsSection-${p.id}" style="display: none; border-top: 1px solid var(--border, #e2e8f0); margin-top: 14px; padding-top: 14px;">
+          <div class="post-comments-list" id="postCommentsList-${p.id}" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;"></div>
+          <div class="post-comment-input-wrap" style="display: flex; gap: 10px; align-items: flex-start;">
+            <div class="avatar-circle" style="width: 32px; height: 32px; flex-shrink: 0; font-size: 11px; overflow: hidden;">
+              <img src="${curAvatar}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+              <textarea id="commentInput-${p.id}" class="form-textarea" rows="2" placeholder="${escapeHtml(tWriteComment)}" style="width: 100%; font-size: 13.5px; padding: 8px 10px; resize: vertical;" onclick="event.stopPropagation()"></textarea>
+              <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="btn btn-primary btn-sm btn-post-comment" onclick="window.submitPostComment(${p.id}, event)" style="padding: 4px 14px; font-size: 13px;">${escapeHtml(tPostBtn)}</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     `;
     }).join("");
+
+    // Wire up UGC translation toggles for community posts
+    posts.forEach(p => {
+      const container = postsFeed.querySelector(`.ugc-post-translate[data-post-id="${p.id}"]`);
+      if (container && window.i18n) {
+        window.i18n.setupUGCTranslateToggle(container, p.content, "auto");
+      }
+    });
   }
 
   function loadSuggestedEntrepreneurs() {
@@ -1372,7 +1360,7 @@ function initDashboardFeed() {
   }
 
   if (sharePostBtn && shareInput) {
-    sharePostBtn.addEventListener("click", function () {
+    sharePostBtn.addEventListener("click", async function () {
       if (!window.CURRENT_USER) {
         showToast("Please log in to share an update with the community.");
         setTimeout(() => {
@@ -1387,22 +1375,35 @@ function initDashboardFeed() {
         return;
       }
 
-      fetch("/api/feed", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: text, post_type: "story", tag: "Community Update" })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) {
-          shareInput.value = "";
-          showToast("Your update was posted and saved to SQLite!");
-          loadFeed();
-        } else {
-          showToast(res.error || "Failed to post.");
+      let created = false;
+      if (window.UdyamAPI && window.supabaseClient) {
+        try {
+          await window.UdyamAPI.createFeedPost(text, "story", "Community Update");
+          created = true;
+        } catch (spErr) {
+          console.warn("Supabase createFeedPost failed, trying local endpoint:", spErr);
         }
-      })
-      .catch(() => showToast("Network error. Please try again."));
+      }
+
+      if (!created) {
+        try {
+          const res = await fetch("/api/feed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: text, post_type: "story", tag: "Community Update" })
+          });
+          const data = await res.json();
+          if (data && data.success) created = true;
+        } catch (_) {}
+      }
+
+      if (created) {
+        shareInput.value = "";
+        showToast("Your update was posted!");
+        loadFeed();
+      } else {
+        showToast("Failed to post update. Please try again.");
+      }
     });
   }
 
@@ -1415,33 +1416,230 @@ function initDashboardFeed() {
     });
   });
 
-  window.toggleLike = function (btn, initialCount, postId) {
+  window.toggleLike = async function (btn, initialCount, postId, event) {
+    if (event) {
+      if (typeof event.preventDefault === "function") event.preventDefault();
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+    }
+
     if (!window.CURRENT_USER) {
       showToast("Please log in to like posts.");
+      setTimeout(() => {
+        window.location.href = "register.html?mode=login";
+      }, 1000);
       return;
     }
 
-    if (postId) {
-      fetch(`/api/posts/${postId}/like`, { method: "POST" })
-        .then(r => r.json())
-        .then(res => {
-          if (res.success) {
-            const countSpan = btn.querySelector("span");
-            const svg = btn.querySelector("svg");
-            const tLike = window.i18n ? window.i18n.t("dashboard.like", {}, "Likes") : "Likes";
-            countSpan.textContent = `${res.likes} ${tLike}`;
-            if (res.liked) {
-              btn.classList.add("active");
-              btn.style.color = "var(--primary)";
-              svg.setAttribute("fill", "var(--primary)");
-            } else {
-              btn.classList.remove("active");
-              btn.style.color = "inherit";
-              svg.setAttribute("fill", "none");
-            }
-          }
-        })
-        .catch(() => {});
+    if (!btn) return;
+
+    const countSpan = btn.querySelector("span");
+    const svg = btn.querySelector("svg");
+    const currentlyActive = btn.classList.contains("active");
+    const currentCount = parseInt(btn.getAttribute("data-count") || initialCount || "0", 10) || 0;
+
+    // Optimistic toggle
+    const nextLiked = !currentlyActive;
+    const nextCount = Math.max(0, currentCount + (nextLiked ? 1 : -1));
+    btn.setAttribute("data-count", nextCount);
+
+    const tLike = window.i18n ? window.i18n.t("dashboard.like", {}, "Likes") : "Likes";
+    if (countSpan) countSpan.textContent = `${nextCount} ${tLike}`;
+
+    if (nextLiked) {
+      btn.classList.add("active");
+      btn.style.color = "var(--primary)";
+      if (svg) svg.setAttribute("fill", "var(--primary)");
+    } else {
+      btn.classList.remove("active");
+      btn.style.color = "inherit";
+      if (svg) svg.setAttribute("fill", "none");
+    }
+
+    if (!postId) return;
+
+    try {
+      let res = null;
+      if (window.UdyamAPI && typeof window.UdyamAPI.togglePostLike === "function") {
+        try {
+          res = await window.UdyamAPI.togglePostLike(postId);
+        } catch (apiErr) {
+          console.warn("UdyamAPI.togglePostLike failed, checking fallback:", apiErr);
+        }
+      }
+
+      if (!res) {
+        try {
+          const resp = await fetch(`/api/posts/${postId}/like`, { method: "POST" });
+          if (resp.ok) res = await resp.json();
+        } catch (_) {}
+      }
+
+      if (res && res.success) {
+        const finalLikes = typeof res.likes === "number" ? res.likes : nextCount;
+        btn.setAttribute("data-count", finalLikes);
+        if (countSpan) countSpan.textContent = `${finalLikes} ${tLike}`;
+        if (res.liked) {
+          btn.classList.add("active");
+          btn.style.color = "var(--primary)";
+          if (svg) svg.setAttribute("fill", "var(--primary)");
+        } else {
+          btn.classList.remove("active");
+          btn.style.color = "inherit";
+          if (svg) svg.setAttribute("fill", "none");
+        }
+      } else {
+        throw new Error(res && res.error ? res.error : "Failed to toggle like");
+      }
+    } catch (err) {
+      console.error("Like toggle failed, reverting UI:", err);
+      // Revert optimistic update
+      btn.setAttribute("data-count", currentCount);
+      if (countSpan) countSpan.textContent = `${currentCount} ${tLike}`;
+      if (currentlyActive) {
+        btn.classList.add("active");
+        btn.style.color = "var(--primary)";
+        if (svg) svg.setAttribute("fill", "var(--primary)");
+      } else {
+        btn.classList.remove("active");
+        btn.style.color = "inherit";
+        if (svg) svg.setAttribute("fill", "none");
+      }
+      showToast("Unable to update like. Please try again.");
+    }
+  };
+
+  window.togglePostComments = function (postId, event) {
+    if (event) {
+      if (typeof event.preventDefault === "function") event.preventDefault();
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+    }
+    const section = document.getElementById(`postCommentsSection-${postId}`);
+    if (!section) return;
+
+    const isHidden = section.style.display === "none" || window.getComputedStyle(section).display === "none";
+    if (isHidden) {
+      section.style.display = "block";
+      window.loadPostComments(postId);
+      const input = document.getElementById(`commentInput-${postId}`);
+      if (input) {
+        setTimeout(() => input.focus(), 60);
+      }
+    } else {
+      section.style.display = "none";
+    }
+  };
+
+  window.loadPostComments = async function (postId) {
+    const listEl = document.getElementById(`postCommentsList-${postId}`);
+    if (!listEl) return;
+
+    listEl.innerHTML = `
+      <div style="font-size: 12.5px; color: var(--text-muted); padding: 6px 0;">
+        Loading comments...
+      </div>
+    `;
+
+    try {
+      const comments = window.UdyamAPI && typeof window.UdyamAPI.getPostComments === "function"
+        ? await window.UdyamAPI.getPostComments(postId)
+        : [];
+
+      if (!comments || comments.length === 0) {
+        listEl.innerHTML = `
+          <div style="font-size: 12.5px; color: var(--text-muted); font-style: italic; padding: 4px 0;">
+            No comments yet. Start the conversation!
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = comments.map(c => `
+        <div class="post-comment-item" style="display: flex; gap: 9px; align-items: flex-start; padding: 4px 0;">
+          <div class="avatar-circle" style="width: 28px; height: 28px; flex-shrink: 0; font-size: 10px; overflow: hidden; border-radius: 50%;">
+            <img src="${escapeHtml(c.author_avatar || 'assets/images/digital_rahul.jpg')}" alt="${escapeHtml(c.author_name || 'Member')}" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="flex: 1; background: var(--bg-surface, #f8fafc); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 8px 12px; font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
+              <span style="font-weight: 600; color: var(--text-primary); font-size: 12.5px;">${escapeHtml(c.author_name || 'Member')}</span>
+              <span style="font-size: 11px; color: var(--text-muted);">${escapeHtml(formatTimeAgo(c.created_at))}</span>
+            </div>
+            <p style="margin: 0; color: var(--text-secondary); line-height: 1.45; word-break: break-word; font-size: 13px;">${escapeHtml(c.text)}</p>
+          </div>
+        </div>
+      `).join("");
+    } catch (err) {
+      console.error("Failed to load post comments:", err);
+      listEl.innerHTML = `
+        <div style="font-size: 12.5px; color: var(--danger, #ef4444); padding: 4px 0;">
+          Failed to load comments.
+        </div>
+      `;
+    }
+  };
+
+  window.submitPostComment = async function (postId, event) {
+    if (event) {
+      if (typeof event.preventDefault === "function") event.preventDefault();
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+    }
+
+    if (!window.CURRENT_USER) {
+      showToast("Please log in to write a comment.");
+      setTimeout(() => {
+        window.location.href = "register.html?mode=login";
+      }, 1000);
+      return;
+    }
+
+    const input = document.getElementById(`commentInput-${postId}`);
+    if (!input) return;
+
+    const text = input.value.trim();
+    if (!text) {
+      showToast("Please write a comment before posting.");
+      input.focus();
+      return;
+    }
+
+    const submitBtn = (event && event.target) ? event.target : document.querySelector(`#postCommentsSection-${postId} .btn-post-comment`);
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Posting...";
+    }
+
+    try {
+      if (!window.UdyamAPI || typeof window.UdyamAPI.createPostComment !== "function") {
+        throw new Error("Comment service is unavailable.");
+      }
+
+      await window.UdyamAPI.createPostComment(postId, text);
+      input.value = "";
+      showToast("Comment posted!");
+
+      // Refresh comments for this post
+      await window.loadPostComments(postId);
+
+      // Increment comments count badge on the card
+      const card = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+      if (card) {
+        const countSpan = card.querySelector(".comment-count-text");
+        if (countSpan) {
+          const match = countSpan.textContent.match(/\d+/);
+          const currentCount = match ? parseInt(match[0], 10) : 0;
+          const newCount = currentCount + 1;
+          const tComments = window.i18n ? window.i18n.t("dashboard.comments", {}, "Comments") : "Comments";
+          countSpan.textContent = `${newCount} ${tComments}`;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to submit comment:", err);
+      showToast(err.message || "Could not post comment. Please try again.");
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        const tPostBtn = window.i18n ? window.i18n.t("dashboard.publish_post", {}, "Post") : "Post";
+        submitBtn.textContent = tPostBtn;
+      }
     }
   };
 

@@ -1057,6 +1057,53 @@ def api_like_post(post_id):
     likes_count = row["likes"] if row else 0
     return jsonify({"success": True, "likes": likes_count, "liked": liked})
 
+@app.route("/api/posts/<int:post_id>/comments", methods=["GET"])
+def api_get_post_comments(post_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT c.id, c.post_id, c.text, c.created_at, u.name as author_name, u.avatar as author_avatar
+    FROM post_comments c
+    JOIN users u ON c.author_id = u.user_id
+    WHERE c.post_id = ?
+    ORDER BY c.id ASC
+    """, (post_id,))
+    comments = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify({"success": True, "comments": comments})
+
+@app.route("/api/posts/<int:post_id>/comments", methods=["POST"])
+@login_required
+def api_add_post_comment(post_id):
+    uid = get_current_user_id()
+    data = request.get_json(silent=True) or request.form
+    text = (data.get("text") or "").strip()
+    if not text:
+        return jsonify({"success": False, "error": "Comment text cannot be empty."}), 400
+
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM posts WHERE id = ?", (post_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return jsonify({"success": False, "error": "Post not found."}), 404
+
+    cursor.execute("INSERT INTO post_comments (post_id, author_id, text) VALUES (?, ?, ?)", (post_id, uid, text))
+    comment_id = cursor.lastrowid
+    cursor.execute("UPDATE posts SET comments_count = comments_count + 1 WHERE id = ?", (post_id,))
+    conn.commit()
+
+    cursor.execute("""
+    SELECT c.id, c.post_id, c.text, c.created_at, u.name as author_name, u.avatar as author_avatar
+    FROM post_comments c
+    JOIN users u ON c.author_id = u.user_id
+    WHERE c.id = ?
+    """, (comment_id,))
+    row = cursor.fetchone()
+    new_comment = dict(row) if row else {"id": comment_id, "text": text}
+    conn.close()
+    return jsonify({"success": True, "comment": new_comment}), 201
+
 # -----------------------------------------------------------------------------
 # 5. Collaboration Opportunities, Requests & Projects API
 # -----------------------------------------------------------------------------

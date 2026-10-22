@@ -142,6 +142,19 @@ def init_db(reset=False):
     );
     """)
 
+    # Post Comments Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS post_comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        post_id INTEGER NOT NULL,
+        author_id TEXT NOT NULL,
+        text TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+        FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
+    );
+    """)
+
     # Collaborations Table (Opportunities)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS collaborations (
