@@ -80,7 +80,7 @@ BEGIN
         COALESCE(NEW.raw_user_meta_data->>'address_landmark', ''),
         COALESCE(NEW.raw_user_meta_data->>'location_display_preference', 'district_state'),
         COALESCE(NEW.raw_user_meta_data->>'preferred_language', 'en'),
-        COALESCE(NEW.raw_user_meta_data->>'avatar', 'assets/images/digital_rahul.jpg'),
+        NULLIF(NEW.raw_user_meta_data->>'avatar', ''),
         COALESCE(NEW.raw_user_meta_data->>'quote', ''),
         COALESCE(NEW.raw_user_meta_data->>'description', ''),
         COALESCE(NEW.raw_user_meta_data->>'full_story', ''),
