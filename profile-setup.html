@@ -342,38 +342,8 @@
       let latestPincodeLookupId = 0;
       let csrfTokenPromise = null;
 
-      // -----------------------------------------------------------------------
-      // CSRF Security Token Management
-      // -----------------------------------------------------------------------
-      function ensureCsrfToken() {
-        if (window.CSRF_TOKEN) {
-          return Promise.resolve(window.CSRF_TOKEN);
-        }
-        if (!csrfTokenPromise) {
-          csrfTokenPromise = fetch("/api/csrf-token", {
-            credentials: "same-origin"
-          })
-            .then(async response => {
-              if (!response.ok) {
-                throw new Error("Could not obtain security token");
-              }
-              const data = await response.json();
-              if (data && data.csrf_token) {
-                window.CSRF_TOKEN = data.csrf_token;
-                return window.CSRF_TOKEN;
-              }
-              throw new Error("Invalid security token response");
-            })
-            .catch(err => {
-              csrfTokenPromise = null; // Allow retry on subsequent calls
-              throw err;
-            });
-        }
-        return csrfTokenPromise;
-      }
-
-      // Pre-fetch token eagerly so it is ready before user submits
-      ensureCsrfToken().catch(() => {});
+      // Supabase handles authenticated requests directly; no Flask CSRF endpoint is used.
+      async function ensureCsrfToken() { return null; }
 
       // -----------------------------------------------------------------------
       // Location Dropdowns Management
@@ -631,60 +601,60 @@ function loadLocations() {
       let setupLogoUrl = null;
       let setupCoverUrl = null;
 
-      // Check current user to prefill existing pictures if any
-      fetch("/api/me")
-        .then(r => r.json())
-        .then(data => {
-          if (data && data.authenticated && data.user) {
-            const u = data.user;
-            if (u.avatar) {
-              setupAvatarUrl = u.avatar;
-              const avImg = document.getElementById("setupAvatarPreview");
-              const avPh = document.getElementById("setupAvatarPlaceholder");
-              const avRem = document.getElementById("setupAvatarRemoveBtn");
-              if (avImg && avPh && avRem) {
-                avImg.src = u.avatar;
-                avImg.style.display = "block";
-                avPh.style.display = "none";
-                avRem.style.display = "inline-flex";
-              }
-            }
-            if (u.business_logo_url) {
-              setupLogoUrl = u.business_logo_url;
-              const lgImg = document.getElementById("setupLogoPreview");
-              const lgPh = document.getElementById("setupLogoPlaceholder");
-              const lgRem = document.getElementById("setupLogoRemoveBtn");
-              if (lgImg && lgPh && lgRem) {
-                lgImg.src = u.business_logo_url;
-                lgImg.style.display = "block";
-                lgPh.style.display = "none";
-                lgRem.style.display = "inline-flex";
-              }
-            }
-            if (u.cover_image_url) {
-              setupCoverUrl = u.cover_image_url;
-              const cvImg = document.getElementById("setupCoverPreview");
-              const cvPh = document.getElementById("setupCoverPlaceholder");
-              const cvRem = document.getElementById("setupCoverRemoveBtn");
-              if (cvImg && cvPh && cvRem) {
-                cvImg.src = u.cover_image_url;
-                cvImg.style.display = "block";
-                cvPh.style.display = "none";
-                cvRem.style.display = "inline-flex";
-              }
-            }
-            if (u.business_name && !document.getElementById("setupBizName").value) {
-              document.getElementById("setupBizName").value = u.business_name;
-            }
-            if (u.quote && !document.getElementById("setupQuote").value) {
-              document.getElementById("setupQuote").value = u.quote;
-            }
-            if (u.category && document.getElementById("setupCategory")) {
-              document.getElementById("setupCategory").value = u.category;
-            }
+      // Load the signed-in user's profile directly from Supabase.
+      async function loadExistingProfile() {
+        try {
+          if (!window.UdyamAuth || typeof window.UdyamAuth.getUser !== "function" || !window.supabaseClient) {
+            throw new Error("Supabase client is not available. Please refresh the page.");
           }
-        })
-        .catch(() => {});
+          const user = await window.UdyamAuth.getUser();
+          if (!user) { window.location.href = "login.html"; return; }
+          await loadLocations();
+
+          const { data, error } = await window.supabaseClient
+            .from("profiles").select("*").eq("id", user.id).maybeSingle();
+          if (error) throw error;
+          const profile = data || {};
+          const setValue = (id, value) => {
+            const el = document.getElementById(id);
+            if (el && value !== null && value !== undefined && value !== "") el.value = value;
+          };
+
+          setValue("setupBizName", profile.business_name || profile.name);
+          setValue("setupQuote", profile.quote);
+          setValue("setupCategory", profile.category);
+          setValue("setupState", profile.state);
+          if (profile.state) {
+            stateSelect.dispatchEvent(new Event("change"));
+            setValue("setupDistrict", profile.district);
+          }
+          setValue("setupTown", profile.subdistrict_or_town);
+          setValue("setupPincode", profile.pincode);
+          setValue("setupLandmark", profile.address_landmark);
+          setValue("setupLocPref", profile.location_display_preference === "exact"
+            ? "village_district_state"
+            : profile.location_display_preference);
+          setValue("setupDesc", profile.description);
+          setValue("setupStory", profile.full_story);
+          setValue("setupLookingFor", Array.isArray(profile.looking_for) ? profile.looking_for.join(", ") : (profile.looking_for || ""));
+          setValue("setupWebsite", profile.website);
+          setValue("setupPhone", profile.phone);
+
+          if (profile.avatar) {
+            setupAvatarUrl = profile.avatar;
+            const img = document.getElementById("setupAvatarPreview");
+            img.src = profile.avatar;
+            img.style.display = "block";
+            document.getElementById("setupAvatarPlaceholder").style.display = "none";
+            document.getElementById("setupAvatarRemoveBtn").style.display = "inline-flex";
+          }
+        } catch (error) {
+          console.error("Could not load profile from Supabase:", error);
+          setupAlert.textContent = "Could not load your profile. Please check your connection and sign in again.";
+          setupAlert.style.display = "block";
+        }
+      }
+      loadExistingProfile();
 
       async function uploadImageFile(file, imageType, previewEl, placeholderEl, removeBtnEl, statusEl) {
         if (!file) return null;
@@ -714,20 +684,7 @@ function loadLocations() {
           if (window.UdyamAPI && typeof window.UdyamAPI.uploadProfileImage === "function") {
             res = await window.UdyamAPI.uploadProfileImage(file, imageType);
           } else {
-            const token = await ensureCsrfToken();
-            const fd = new FormData();
-            fd.append("file", file);
-            fd.append("image_type", imageType);
-            const r = await fetch("/api/upload", {
-              method: "POST",
-              headers: token ? { "X-CSRF-Token": token } : {},
-              credentials: "same-origin",
-              body: fd
-            });
-            res = await r.json();
-            if (!r.ok || !res.success) {
-              throw new Error(res.error || "Image upload failed");
-            }
+            throw new Error("Image uploads are not configured for this Vercel deployment yet. You can still save your profile.");
           }
 
           if (res && res.success && res.url) {
@@ -800,96 +757,89 @@ function loadLocations() {
       setupImageControls("setupCover", "cover", url => { setupCoverUrl = url; });
 
       // -----------------------------------------------------------------------
-      // Profile Setup Form Submission
+      // Save profile directly to Supabase (no Flask/Vercel API routes).
       // -----------------------------------------------------------------------
       setupForm.addEventListener("submit", async function (e) {
         e.preventDefault();
         setupAlert.style.display = "none";
 
+        const user = window.UdyamAuth && await window.UdyamAuth.getUser();
+        if (!user) {
+          setupAlert.textContent = "Your session has expired. Please sign in again.";
+          setupAlert.style.display = "block";
+          return;
+        }
+
         const bizName = document.getElementById("setupBizName").value.trim();
         const category = document.getElementById("setupCategory").value;
         const quote = document.getElementById("setupQuote").value.trim();
-        const state = document.getElementById("setupState").value.trim();
-        const district = document.getElementById("setupDistrict").value.trim();
+        const state = stateSelect.value.trim();
+        const district = districtSelect.value.trim();
         const town = document.getElementById("setupTown").value.trim();
-        const pincode = document.getElementById("setupPincode").value.trim();
+        const pincode = pincodeInput.value.trim();
         const landmark = document.getElementById("setupLandmark").value.trim();
         const pref = document.getElementById("setupLocPref").value;
         const desc = document.getElementById("setupDesc").value.trim();
         const story = document.getElementById("setupStory").value.trim();
-        const lookingFor = document.getElementById("setupLookingFor").value.trim();
+        const lookingFor = document.getElementById("setupLookingFor").value
+          .split(",").map(item => item.trim()).filter(Boolean);
         const website = document.getElementById("setupWebsite").value.trim();
         const phone = document.getElementById("setupPhone").value.trim();
 
-        if (pincode && !/^[1-9][0-9]{5}$/.test(pincode)) {
-          setupAlert.textContent = window.i18n
-            ? window.i18n.t("profile_setup.pincode_invalid", "Please enter a valid 6-digit Indian PIN code.")
-            : "Please enter a valid 6-digit Indian PIN code.";
+        if (!/^[1-9][0-9]{5}$/.test(pincode)) {
+          setupAlert.textContent = "Please enter a valid 6-digit Indian PIN code.";
+          setupAlert.style.display = "block";
+          return;
+        }
+        if (!bizName || !state || !district) {
+          setupAlert.textContent = "Please enter your business name, state, and district.";
           setupAlert.style.display = "block";
           return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.saving", "Saving Profile...") : "Saving Profile...";
-
-        const payload = {
-          business_name: bizName,
-          category: category,
-          quote: quote,
-          state: state,
-          district: district,
-          subdistrict_or_town: town,
-          pincode: pincode,
-          address_landmark: landmark,
-          location_display_preference: pref,
-          description: desc,
-          full_story: story,
-          looking_for: lookingFor,
-          website: website,
-          phone: phone
-        };
-        if (setupAvatarUrl !== null) payload.avatar = setupAvatarUrl;
-        if (setupLogoUrl !== null) payload.business_logo_url = setupLogoUrl;
-        if (setupCoverUrl !== null) payload.cover_image_url = setupCoverUrl;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = "Saving Profile...";
 
         try {
-          const token = await ensureCsrfToken();
-          if (!token) {
-            throw new Error("Could not obtain security token");
-          }
+          if (!window.supabaseClient) throw new Error("Supabase is not configured. Refresh and try again.");
+          const safePreference = pref === "village_district_state" ? "exact" : pref;
+          const payload = {
+            id: user.id,
+            email: user.email || "",
+            name: user.user_metadata?.name || user.email?.split("@")[0] || bizName,
+            business_name: bizName,
+            category,
+            quote,
+            state,
+            district,
+            location: town || [district, state].filter(Boolean).join(", "),
+            subdistrict_or_town: town,
+            pincode,
+            address_landmark: landmark,
+            location_display_preference: safePreference,
+            description: desc,
+            full_story: story,
+            looking_for: lookingFor,
+            website,
+            phone,
+            updated_at: new Date().toISOString()
+          };
+          if (setupAvatarUrl !== null) payload.avatar = setupAvatarUrl;
 
-          const response = await fetch("/api/profile", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRF-Token": token
-            },
-            credentials: "same-origin",
-            body: JSON.stringify(payload)
-          });
+          const { error } = await window.supabaseClient
+            .from("profiles").upsert(payload, { onConflict: "id" });
+          if (error) throw error;
 
-          const res = await response.json();
-          submitBtn.disabled = false;
-          submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.submit_btn", "Save Enterprise Profile & Continue") : "Save Enterprise Profile & Continue";
-
-          if (response.ok && res.success) {
-            if (typeof showToast === "function") {
-              showToast(window.i18n ? window.i18n.t("profile_setup.completed", "Enterprise profile setup completed!") : "Enterprise profile setup completed!");
-            }
-            setTimeout(() => {
-              window.location.href = "profile.html";
-            }, 800);
-          } else {
-            setupAlert.textContent = res.error || (window.i18n ? window.i18n.t("profile_setup.save_error", "Failed to save profile.") : "Failed to save profile.");
-            setupAlert.style.display = "block";
-          }
+          if (typeof showToast === "function") showToast("Enterprise profile saved successfully!");
+          window.location.href = "profile.html";
         } catch (err) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.submit_btn", "Save Enterprise Profile & Continue") : "Save Enterprise Profile & Continue";
-          setupAlert.textContent = err && err.message === "Could not obtain security token"
-            ? (window.i18n ? window.i18n.t("profile_setup.csrf_error", "Could not obtain security token. Please refresh and try again.") : "Could not obtain security token. Please refresh and try again.")
-            : (window.i18n ? window.i18n.t("profile_setup.network_error", "Network error. Please try again.") : "Network error. Please try again.");
+          console.error("Supabase profile save failed:", err);
+          setupAlert.textContent = err?.message || "Failed to save profile. Please try again.";
           setupAlert.style.display = "block";
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText || "Save Enterprise Profile & Continue";
         }
       });
     });
