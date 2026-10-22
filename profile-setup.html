@@ -806,6 +806,12 @@ function loadLocations() {
           const safePreference = pref === "village_district_state" ? "exact" : pref;
           const payload = {
             id: user.id,
+            slug: (bizName || "enterprise")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "")
+  .slice(0, 48)
+  + "-" + user.id.replace(/-/g, "").slice(0, 8),
             email: user.email || "",
             name: user.user_metadata?.name || user.email?.split("@")[0] || bizName,
             business_name: bizName,
