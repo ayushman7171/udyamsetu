@@ -123,7 +123,16 @@
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              <input type="text" id="regFullName" class="form-input input-with-icon" placeholder="Full Name" data-i18n-placeholder="auth.full_name_placeholder">
+              <input  type="text"
+                      id="regFullName"
+                      name="full_name"
+                      class="form-input input-with-icon"
+                      placeholder="Full Name (e.g., Ramesh Kumar)"
+                      data-i18n-placeholder="auth.full_name_placeholder"
+                      autocomplete="name"
+                      minlength="2"
+                      maxlength="80"
+                      required>
             </div>
           </div>
 

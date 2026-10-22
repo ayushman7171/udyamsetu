@@ -203,8 +203,8 @@ function updateGlobalNavigation(user) {
         </div>
       </div>
       ${langHtml}
-      <a href="profile.html" class="user-avatar-btn" title="My Profile (${user.name})" data-i18n-title="nav.my_profile">
-        ${initials}
+      <a href="profile.html" class="user-avatar-btn" title="My Profile (${escapeHtml(user.name)})" data-i18n-title="nav.my_profile" style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+        ${user.avatar ? `<img src="${user.avatar}" alt="${escapeHtml(user.name)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : initials}
       </a>
       <button class="btn btn-outline btn-sm" onclick="window.handleLogout(event)" style="font-size: 13px; padding: 6px 12px; margin-left: 2px;" data-i18n="nav.logout">
         ${window.i18n ? window.i18n.t("nav.logout") : "Logout"}
@@ -984,8 +984,11 @@ function initDirectoryPage() {
       return `
         <div class="directory-card">
           <div class="directory-card-left">
-            <div class="directory-avatar">
+            <div class="directory-avatar" style="position: relative;">
               <img src="${ent.avatar || 'assets/images/digital_rahul.jpg'}" alt="${escapeHtml(ent.name)}">
+              ${ent.business_logo_url ? `
+                <img src="${ent.business_logo_url}" alt="Logo" title="${escapeHtml(ent.business_name || ent.name)}" style="position: absolute; bottom: -4px; right: -4px; width: 22px; height: 22px; border-radius: 4px; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); background: #fff;">
+              ` : ''}
             </div>
             <div class="directory-card-info">
               <div class="directory-card-name-row">
@@ -1610,9 +1613,29 @@ function renderProfileData(user) {
   const avatarContainer = document.getElementById("profileAvatarLarge");
   if (avatarContainer) {
     if (user.avatar) {
-      avatarContainer.innerHTML = `<img src="${user.avatar}" alt="${escapeHtml(user.name)}">`;
+      avatarContainer.innerHTML = `<img src="${user.avatar}" alt="${escapeHtml(user.name)}" style="width: 100%; height: 100%; object-fit: cover;">`;
     } else {
       avatarContainer.innerHTML = `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--primary); color: #fff; font-size: 28px; font-weight: 700;">${getInitials(user.name)}</div>`;
+    }
+  }
+
+  // Cover image banner
+  const bannerImg = document.getElementById("profileBannerImg");
+  if (bannerImg) {
+    bannerImg.src = user.cover_image_url || "assets/images/crafts_banner.jpg";
+    bannerImg.alt = `${escapeHtml(user.business_name || user.name)} Banner`;
+  }
+
+  // Business logo in profile header
+  const logoWrap = document.getElementById("profileBusinessLogoWrap");
+  const logoImg = document.getElementById("profileBusinessLogo");
+  if (logoWrap && logoImg) {
+    if (user.business_logo_url && !isCommunity) {
+      logoImg.src = user.business_logo_url;
+      logoImg.alt = `${escapeHtml(user.business_name || user.name)} Logo`;
+      logoWrap.style.display = "inline-flex";
+    } else {
+      logoWrap.style.display = "none";
     }
   }
 
@@ -1789,6 +1812,12 @@ window.openEditProfileModal = function () {
 
   const modalTitle = isCommunity ? t("profile.edit_community_title", "Edit Community Member Profile") : t("profile.edit_profile", "Edit Enterprise Profile");
 
+  window._editProfileState = {
+    avatar: u.avatar || "",
+    logo: u.business_logo_url || "",
+    cover: u.cover_image_url || ""
+  };
+
   modal.innerHTML = `
     <div class="modal-dialog" style="max-width: 640px;">
       <div class="modal-header">
@@ -1798,6 +1827,76 @@ window.openEditProfileModal = function () {
       <div class="modal-body" style="max-height: 78vh; overflow-y: auto;">
         <div id="editProfileAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px; font-size: 13px; border-radius: 6px; margin-bottom: 12px;"></div>
         <form id="editProfileForm">
+
+          <!-- Visuals & Profile Images Management -->
+          <div style="font-weight: 600; font-size: 13.5px; color: var(--primary-dark); margin: 0 0 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px;">
+            ${escapeHtml(t("profile.visuals_branding", "Profile Images & Visuals"))}
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+            <!-- 1. Avatar Row -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid var(--border-color); flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div id="editAvatarPreviewWrap" style="width: 48px; height: 48px; border-radius: 50%; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.1); flex-shrink: 0;">
+                  <img id="editAvatarPreview" src="${escapeHtml(u.avatar || '')}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; ${u.avatar ? '' : 'display: none;'}">
+                  <span id="editAvatarPlaceholder" style="font-size: 20px; ${u.avatar ? 'display: none;' : ''}">👤</span>
+                </div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600;">${escapeHtml(t("profile.profile_avatar", "Personal Avatar"))}</div>
+                  <div style="font-size: 11.5px; color: var(--text-muted);">Max 5 MB &bull; JPEG, PNG, WebP</div>
+                  <div id="editAvatarStatus" style="font-size: 11.5px; display: none;"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <input type="file" id="editAvatarFile" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" class="btn btn-outline btn-sm" id="editAvatarBtn">${escapeHtml(u.avatar ? t("profile.replace_photo", "Replace") : t("profile.upload_photo", "Upload"))}</button>
+                <button type="button" class="btn btn-outline btn-sm" id="editAvatarRemoveBtn" style="color: #b91c1c; border-color: #fecaca; ${u.avatar ? '' : 'display: none;'}">${escapeHtml(t("profile.remove_photo", "Remove"))}</button>
+              </div>
+            </div>
+
+            ${!isCommunity ? `
+            <!-- 2. Business Logo Row -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid var(--border-color); flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div id="editLogoPreviewWrap" style="width: 48px; height: 48px; border-radius: 6px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.1); flex-shrink: 0;">
+                  <img id="editLogoPreview" src="${escapeHtml(u.business_logo_url || '')}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; ${u.business_logo_url ? '' : 'display: none;'}">
+                  <span id="editLogoPlaceholder" style="font-size: 20px; ${u.business_logo_url ? 'display: none;' : ''}">🏢</span>
+                </div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600;">${escapeHtml(t("profile.business_logo", "Business Logo"))}</div>
+                  <div style="font-size: 11.5px; color: var(--text-muted);">Max 5 MB &bull; JPEG, PNG, WebP</div>
+                  <div id="editLogoStatus" style="font-size: 11.5px; display: none;"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <input type="file" id="editLogoFile" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" class="btn btn-outline btn-sm" id="editLogoBtn">${escapeHtml(u.business_logo_url ? t("profile.replace_logo", "Replace") : t("profile.upload_logo", "Upload"))}</button>
+                <button type="button" class="btn btn-outline btn-sm" id="editLogoRemoveBtn" style="color: #b91c1c; border-color: #fecaca; ${u.business_logo_url ? '' : 'display: none;'}">${escapeHtml(t("profile.remove_logo", "Remove"))}</button>
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- 3. Cover Image Row -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; background: #f8fafc; border-radius: 6px; border: 1px solid var(--border-color); flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div id="editCoverPreviewWrap" style="width: 70px; height: 44px; border-radius: 6px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.1); flex-shrink: 0;">
+                  <img id="editCoverPreview" src="${escapeHtml(u.cover_image_url || '')}" alt="Cover" style="width: 100%; height: 100%; object-fit: cover; ${u.cover_image_url ? '' : 'display: none;'}">
+                  <span id="editCoverPlaceholder" style="font-size: 18px; ${u.cover_image_url ? 'display: none;' : ''}">🖼️</span>
+                </div>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 600;">${escapeHtml(t("profile.cover_banner", "Cover / Banner Image"))}</div>
+                  <div style="font-size: 11.5px; color: var(--text-muted);">Max 5 MB &bull; JPEG, PNG, WebP</div>
+                  <div id="editCoverStatus" style="font-size: 11.5px; display: none;"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <input type="file" id="editCoverFile" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" class="btn btn-outline btn-sm" id="editCoverBtn">${escapeHtml(u.cover_image_url ? t("profile.replace_cover", "Replace") : t("profile.upload_cover", "Upload"))}</button>
+                <button type="button" class="btn btn-outline btn-sm" id="editCoverRemoveBtn" style="color: #b91c1c; border-color: #fecaca; ${u.cover_image_url ? '' : 'display: none;'}">${escapeHtml(t("profile.remove_cover", "Remove"))}</button>
+              </div>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">${escapeHtml(t("profile.edit_name", "Full Name"))} *</label>
             <input type="text" id="editName" class="form-input" value="${escapeHtml(u.name || '')}" required>
@@ -1899,10 +1998,131 @@ window.openEditProfileModal = function () {
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary btn-sm" onclick="document.getElementById('editProfileModal').classList.remove('active')">${escapeHtml(t("common.cancel", "Cancel"))}</button>
-        <button class="btn btn-primary btn-sm" onclick="window.saveProfileEdits()">${escapeHtml(t("profile.save_changes", "Save Profile"))}</button>
+        <button class="btn btn-primary btn-sm" id="editProfileSaveBtn" onclick="window.saveProfileEdits()">${escapeHtml(t("profile.save_changes", "Save Profile"))}</button>
       </div>
     </div>
   `;
+
+  // Wire up image upload controls
+  function wireEditUpload(fileInputId, chooseBtnId, removeBtnId, previewId, placeholderId, statusId, key, imageType) {
+    const fileInput = document.getElementById(fileInputId);
+    const chooseBtn = document.getElementById(chooseBtnId);
+    const removeBtn = document.getElementById(removeBtnId);
+    const preview = document.getElementById(previewId);
+    const placeholder = document.getElementById(placeholderId);
+    const status = document.getElementById(statusId);
+    const saveBtn = document.getElementById("editProfileSaveBtn");
+
+    if (chooseBtn && fileInput) {
+      chooseBtn.addEventListener("click", () => fileInput.click());
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener("change", async () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) return;
+
+        // Check size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          const err = t("profile.file_too_large", "File size exceeds 5 MB limit. Please select a smaller file.");
+          if (status) {
+            status.textContent = err;
+            status.style.color = "#b91c1c";
+            status.style.display = "block";
+          }
+          fileInput.value = "";
+          return;
+        }
+
+        // Check format
+        const allowed = ["image/jpeg", "image/png", "image/webp"];
+        if (!allowed.includes(file.type.toLowerCase())) {
+          const err = t("profile.invalid_format", "Only JPEG, PNG, and WebP images are allowed.");
+          if (status) {
+            status.textContent = err;
+            status.style.color = "#b91c1c";
+            status.style.display = "block";
+          }
+          fileInput.value = "";
+          return;
+        }
+
+        if (status) {
+          status.textContent = t("common.uploading", "Uploading...");
+          status.style.color = "#0284c7";
+          status.style.display = "block";
+        }
+        if (saveBtn) saveBtn.disabled = true;
+
+        try {
+          let res = null;
+          if (window.UdyamAPI && typeof window.UdyamAPI.uploadProfileImage === "function") {
+            res = await window.UdyamAPI.uploadProfileImage(file, imageType);
+          } else {
+            const fd = new FormData();
+            fd.append("file", file);
+            fd.append("image_type", imageType);
+            const r = await fetch("/api/upload", {
+              method: "POST",
+              credentials: "same-origin",
+              body: fd
+            });
+            res = await r.json();
+            if (!r.ok || !res.success) throw new Error(res.error || "Upload failed");
+          }
+
+          if (res && res.success && res.url) {
+            window._editProfileState[key] = res.url;
+            if (preview) {
+              preview.src = res.url;
+              preview.style.display = "block";
+            }
+            if (placeholder) placeholder.style.display = "none";
+            if (removeBtn) removeBtn.style.display = "inline-flex";
+            if (chooseBtn) chooseBtn.textContent = t("profile.replace_photo", "Replace");
+            if (status) {
+              status.textContent = t("profile.uploaded_success", "Uploaded ✓");
+              status.style.color = "#15803d";
+              setTimeout(() => { if (status.textContent.includes("✓")) status.style.display = "none"; }, 2500);
+            }
+          } else {
+            throw new Error(res?.error || "Upload failed");
+          }
+        } catch (err) {
+          if (status) {
+            status.textContent = err.message || "Upload failed";
+            status.style.color = "#b91c1c";
+          }
+        } finally {
+          if (saveBtn) saveBtn.disabled = false;
+        }
+      });
+    }
+
+    if (removeBtn) {
+      removeBtn.addEventListener("click", () => {
+        window._editProfileState[key] = "";
+        if (fileInput) fileInput.value = "";
+        if (preview) {
+          preview.src = "";
+          preview.style.display = "none";
+        }
+        if (placeholder) placeholder.style.display = "inline-flex";
+        removeBtn.style.display = "none";
+        if (chooseBtn) chooseBtn.textContent = t("profile.upload_photo", "Upload");
+        if (status) {
+          status.textContent = t("profile.removed_label", "Removed");
+          status.style.color = "#64748b";
+          status.style.display = "block";
+          setTimeout(() => { if (status.textContent === "Removed") status.style.display = "none"; }, 2000);
+        }
+      });
+    }
+  }
+
+  wireEditUpload("editAvatarFile", "editAvatarBtn", "editAvatarRemoveBtn", "editAvatarPreview", "editAvatarPlaceholder", "editAvatarStatus", "avatar", "avatar");
+  wireEditUpload("editLogoFile", "editLogoBtn", "editLogoRemoveBtn", "editLogoPreview", "editLogoPlaceholder", "editLogoStatus", "logo", "business_logo");
+  wireEditUpload("editCoverFile", "editCoverBtn", "editCoverRemoveBtn", "editCoverPreview", "editCoverPlaceholder", "editCoverStatus", "cover", "cover");
 
   // Dynamic dropdown logic backed by /api/locations
   const stateSelect = document.getElementById("editState");
@@ -1985,6 +2205,12 @@ window.saveProfileEdits = function () {
     website: document.getElementById("editWebsite") ? document.getElementById("editWebsite").value.trim() : "",
     phone: document.getElementById("editPhone") ? document.getElementById("editPhone").value.trim() : ""
   };
+
+  if (window._editProfileState) {
+    payload.avatar = window._editProfileState.avatar;
+    payload.business_logo_url = window._editProfileState.logo;
+    payload.cover_image_url = window._editProfileState.cover;
+  }
 
   fetch("/api/profile", {
     method: "POST",
@@ -3162,29 +3388,94 @@ function initAuthPage() {
     window.i18n.bindLanguageSelectors();
   }
 
-  function setMode(registerMode) {
-    isRegisterMode = registerMode;
-    const registerFields = document.querySelectorAll(".register-only-field");
 
-    if (authAlert) authAlert.style.display = "none";
+function setMode(registerMode) {
+  isRegisterMode = registerMode;
+  const registerFields = document.querySelectorAll(".register-only-field");
 
-    if (isRegisterMode) {
-      if (authTitle) authTitle.textContent = window.i18n ? window.i18n.t("auth.create_account") : "Create Your Account";
-      if (authSubtitle) authSubtitle.textContent = window.i18n ? window.i18n.t("auth.register_subtitle") : "Join a growing community of rural entrepreneurs and supporters";
-      if (authSubmitBtn) authSubmitBtn.textContent = window.i18n ? window.i18n.t("auth.register_btn") : "Sign Up";
-      if (authTogglePrompt) authTogglePrompt.textContent = (window.i18n ? window.i18n.t("auth.have_account") : "Already have an account?") + " ";
-      authModeToggle.textContent = window.i18n ? window.i18n.t("auth.sign_in_link") : "Login";
-      registerFields.forEach(f => f.style.display = "block");
-      if (passWrap && regPass && regPass.value) passWrap.style.display = "block";
-    } else {
-      if (authTitle) authTitle.textContent = window.i18n ? window.i18n.t("auth.welcome_back") : "Welcome Back";
-      if (authSubtitle) authSubtitle.textContent = window.i18n ? window.i18n.t("auth.login_subtitle") : "Login to connect with your rural enterprise network";
-      if (authSubmitBtn) authSubmitBtn.textContent = window.i18n ? window.i18n.t("auth.login_btn") : "Login";
-      if (authTogglePrompt) authTogglePrompt.textContent = (window.i18n ? window.i18n.t("auth.no_account") : "Don't have an account?") + " ";
-      authModeToggle.textContent = window.i18n ? window.i18n.t("auth.sign_up_link") : "Sign Up";
-      registerFields.forEach(f => f.style.display = "none");
+  if (authAlert) authAlert.style.display = "none";
+
+  if (isRegisterMode) {
+    if (authTitle) {
+      authTitle.textContent = window.i18n
+        ? window.i18n.t("auth.create_account", {}, "Create Your Account")
+        : "Create Your Account";
     }
+
+    if (authSubtitle) {
+      authSubtitle.textContent = window.i18n
+        ? window.i18n.t(
+            "auth.register_subtitle",
+            {},
+            "Join a growing community of rural entrepreneurs and supporters"
+          )
+        : "Join a growing community of rural entrepreneurs and supporters";
+    }
+
+    if (authSubmitBtn) {
+      authSubmitBtn.textContent = window.i18n
+        ? window.i18n.t("auth.register_btn", {}, "Create Account")
+        : "Create Account";
+    }
+
+    if (authTogglePrompt) {
+      authTogglePrompt.textContent =
+        (window.i18n
+          ? window.i18n.t("auth.have_account", {}, "Already have an account?")
+          : "Already have an account?") + " ";
+    }
+
+    if (authModeToggle) {
+      authModeToggle.textContent = window.i18n
+        ? window.i18n.t("auth.sign_in_link", {}, "Login")
+        : "Login";
+    }
+
+    registerFields.forEach(f => f.style.display = "block");
+
+    if (passWrap && regPass && regPass.value) {
+      passWrap.style.display = "block";
+    }
+  } else {
+    if (authTitle) {
+      authTitle.textContent = window.i18n
+        ? window.i18n.t("auth.welcome_back", {}, "Welcome Back")
+        : "Welcome Back";
+    }
+
+    if (authSubtitle) {
+      authSubtitle.textContent = window.i18n
+        ? window.i18n.t(
+            "auth.login_subtitle",
+            {},
+            "Log in to your ThriveHub account"
+          )
+        : "Log in to your ThriveHub account";
+    }
+
+    if (authSubmitBtn) {
+      authSubmitBtn.textContent = window.i18n
+        ? window.i18n.t("auth.login_btn", {}, "Log In")
+        : "Log In";
+    }
+
+    if (authTogglePrompt) {
+      authTogglePrompt.textContent =
+        (window.i18n
+          ? window.i18n.t("auth.no_account", {}, "Don't have an account?")
+          : "Don't have an account?") + " ";
+    }
+
+    if (authModeToggle) {
+      authModeToggle.textContent = window.i18n
+        ? window.i18n.t("auth.sign_up_link", {}, "Sign Up")
+        : "Sign Up";
+    }
+
+    registerFields.forEach(f => f.style.display = "none");
   }
+}
+
 
   setMode(isRegisterMode);
 
@@ -3211,10 +3502,25 @@ function initAuthPage() {
       const accountType = selectedRadio ? selectedRadio.value : "entrepreneur";
       const preferredLang = window.i18n ? window.i18n.currentLanguage : "en";
 
-      if (!name || name.length < 2) {
-        showAuthError(window.i18n ? window.i18n.t("auth.err_name", {}, "Please provide a valid full name (at least 2 characters).") : "Please provide a valid full name (at least 2 characters).");
-        return;
-      }
+     
+    const validName =
+      /^[\p{L}\p{M}]+(?:[ .'-][\p{L}\p{M}]+)*$/u.test(name) &&
+      name.length >= 2 &&
+      name.length <= 80;
+
+    if (!validName) {
+      showAuthError(
+        window.i18n
+          ? window.i18n.t(
+          "auth.err_name",
+          {},
+          "Enter a valid full name using letters, spaces, hyphens, apostrophes, or periods."
+            )
+          : "Enter a valid full name using letters, spaces, hyphens, apostrophes, or periods."
+      );
+      return;
+    }
+
       if (password.length < 8) {
         showAuthError(window.i18n ? window.i18n.t("auth.err_password_min", {}, "Password must be at least 8 characters long.") : "Password must be at least 8 characters long.");
         return;

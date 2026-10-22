@@ -88,7 +88,9 @@ def init_db(reset=False):
         ("pincode", "TEXT DEFAULT ''"),
         ("address_landmark", "TEXT DEFAULT ''"),
         ("location_display_preference", "TEXT DEFAULT 'district_state'"),
-        ("preferred_language", "TEXT DEFAULT 'en'")
+        ("preferred_language", "TEXT DEFAULT 'en'"),
+        ("business_logo_url", "TEXT DEFAULT ''"),
+        ("cover_image_url", "TEXT DEFAULT ''")
     ]
 
     for col_name, col_def in columns_to_add:

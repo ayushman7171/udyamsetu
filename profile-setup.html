@@ -132,7 +132,75 @@
             <input type="text" id="setupQuote" class="form-input" placeholder="e.g. Preserving traditional craftsmanship through local women empowerment." data-i18n-placeholder="profile_setup.quote">
           </div>
 
-          <!-- Section 2: Location & Privacy -->
+          <!-- Section 2: Visuals & Branding (Optional) -->
+          <div class="form-section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            <span data-i18n="profile_setup.branding_title">Branding & Profile Images</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
+            <!-- 1. Personal Avatar -->
+            <div style="border: 1px dashed var(--border-color, #cbd5e1); border-radius: var(--radius-md, 8px); padding: 14px 16px; background: #fafafa; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                  <img id="setupAvatarPreview" src="" alt="Avatar Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                  <span id="setupAvatarPlaceholder" style="font-size: 22px; color: #64748b;">👤</span>
+                </div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 600; color: var(--text-main, #1e293b);" data-i18n="profile_setup.personal_avatar">Personal Profile Photo</div>
+                  <div style="font-size: 12px; color: var(--text-muted, #64748b);">Square headshot (JPEG, PNG, WebP &bull; Max 5 MB)</div>
+                  <div id="setupAvatarStatus" style="font-size: 12px; margin-top: 2px; display: none;"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input type="file" id="setupAvatarInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" id="setupAvatarChooseBtn" class="btn btn-outline btn-sm">Upload Photo</button>
+                <button type="button" id="setupAvatarRemoveBtn" class="btn btn-outline btn-sm" style="display: none; color: #b91c1c; border-color: #fca5a5;">Remove</button>
+              </div>
+            </div>
+
+            <!-- 2. Business Logo -->
+            <div style="border: 1px dashed var(--border-color, #cbd5e1); border-radius: var(--radius-md, 8px); padding: 14px 16px; background: #fafafa; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 54px; height: 54px; border-radius: 8px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                  <img id="setupLogoPreview" src="" alt="Business Logo Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                  <span id="setupLogoPlaceholder" style="font-size: 22px; color: #64748b;">🏢</span>
+                </div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 600; color: var(--text-main, #1e293b);" data-i18n="profile_setup.business_logo">Business Logo</div>
+                  <div style="font-size: 12px; color: var(--text-muted, #64748b);">Your brand logo or mark (JPEG, PNG, WebP &bull; Max 5 MB)</div>
+                  <div id="setupLogoStatus" style="font-size: 12px; margin-top: 2px; display: none;"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input type="file" id="setupLogoInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" id="setupLogoChooseBtn" class="btn btn-outline btn-sm">Upload Logo</button>
+                <button type="button" id="setupLogoRemoveBtn" class="btn btn-outline btn-sm" style="display: none; color: #b91c1c; border-color: #fca5a5;">Remove</button>
+              </div>
+            </div>
+
+            <!-- 3. Cover Banner -->
+            <div style="border: 1px dashed var(--border-color, #cbd5e1); border-radius: var(--radius-md, 8px); padding: 14px 16px; background: #fafafa; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 80px; height: 50px; border-radius: 6px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                  <img id="setupCoverPreview" src="" alt="Cover Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                  <span id="setupCoverPlaceholder" style="font-size: 20px; color: #64748b;">🖼️</span>
+                </div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 600; color: var(--text-main, #1e293b);" data-i18n="profile_setup.cover_image">Cover Image</div>
+                  <div style="font-size: 12px; color: var(--text-muted, #64748b);">Banner for your profile top (JPEG, PNG, WebP &bull; Max 5 MB)</div>
+                  <div id="setupCoverStatus" style="font-size: 12px; margin-top: 2px; display: none;"></div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input type="file" id="setupCoverInput" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                <button type="button" id="setupCoverChooseBtn" class="btn btn-outline btn-sm">Upload Cover</button>
+                <button type="button" id="setupCoverRemoveBtn" class="btn btn-outline btn-sm" style="display: none; color: #b91c1c; border-color: #fca5a5;">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Location & Privacy -->
           <div class="form-section-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span data-i18n="profile_setup.location_details">Location Details</span>
@@ -160,7 +228,23 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="setupPincode" data-i18n="profile_setup.pincode">6-Digit PIN Code *</label>
-              <input type="text" id="setupPincode" class="form-input" placeholder="e.g. 412803" maxlength="6" pattern="[1-9][0-9]{5}" required>
+              <input
+  type="text"
+  id="setupPincode"
+  class="form-input"
+  placeholder="e.g. 412803"
+  maxlength="6"
+  pattern="[1-9][0-9]{5}"
+  inputmode="numeric"
+  autocomplete="postal-code"
+  required
+>
+<small
+  id="pincodeStatus"
+  role="status"
+  aria-live="polite"
+  style="display: block; margin-top: 6px; font-size: 12px;"
+></small>
             </div>
           </div>
 
@@ -247,37 +331,123 @@
       const setupForm = document.getElementById("profileSetupForm");
       const setupAlert = document.getElementById("setupAlert");
       const submitBtn = document.getElementById("setupSubmitBtn");
+      const pincodeInput = document.getElementById("setupPincode");
+      const pincodeStatus = document.getElementById("pincodeStatus");
 
-      let locationsData = {};
+      let locationsMap = {};
+      let locationsLoadedPromise = null;
+      let pincodeLookupTimer = null;
+      let pincodeAbortController = null;
+      let latestPincodeLookupId = 0;
+      let csrfTokenPromise = null;
 
-      function populateStates() {
+      // -----------------------------------------------------------------------
+      // CSRF Security Token Management
+      // -----------------------------------------------------------------------
+      function ensureCsrfToken() {
+        if (window.CSRF_TOKEN) {
+          return Promise.resolve(window.CSRF_TOKEN);
+        }
+        if (!csrfTokenPromise) {
+          csrfTokenPromise = fetch("/api/csrf-token", {
+            credentials: "same-origin"
+          })
+            .then(async response => {
+              if (!response.ok) {
+                throw new Error("Could not obtain security token");
+              }
+              const data = await response.json();
+              if (data && data.csrf_token) {
+                window.CSRF_TOKEN = data.csrf_token;
+                return window.CSRF_TOKEN;
+              }
+              throw new Error("Invalid security token response");
+            })
+            .catch(err => {
+              csrfTokenPromise = null; // Allow retry on subsequent calls
+              throw err;
+            });
+        }
+        return csrfTokenPromise;
+      }
+
+      // Pre-fetch token eagerly so it is ready before user submits
+      ensureCsrfToken().catch(() => {});
+
+      // -----------------------------------------------------------------------
+      // Location Dropdowns Management
+      // -----------------------------------------------------------------------
+      function populateStates(statesList) {
         const curVal = stateSelect.value;
         const defaultText = window.i18n ? window.i18n.t("profile_setup.select_state", "Select State") : "Select State";
         stateSelect.innerHTML = `<option value="">${defaultText}</option>`;
-        const states = locationsData.states || Object.keys(locationsData).sort();
+        stateSelect.disabled = false;
+
+        const states = statesList || (locationsMap ? Object.keys(locationsMap).sort() : []);
         states.forEach(st => {
           const opt = document.createElement("option");
           opt.value = st;
           opt.textContent = window.i18n ? window.i18n.t("states." + st, st) : st;
-          if (st === curVal) opt.selected = true;
+          if (curVal && st.toLowerCase() === curVal.toLowerCase()) {
+            opt.selected = true;
+          }
           stateSelect.appendChild(opt);
         });
       }
 
-      // Load Indian locations dataset
-      fetch("/api/locations")
-        .then(r => r.json())
-        .then(data => {
-          if (data && data.locations) {
-            locationsData = data.locations;
-            populateStates();
-          }
-        })
-        .catch(() => {});
+      function loadLocations() {
+        if (locationsLoadedPromise) {
+          return locationsLoadedPromise;
+        }
+
+        locationsLoadedPromise = fetch("/api/locations")
+          .then(async response => {
+            if (!response.ok) {
+              throw new Error(`Failed to load locations: HTTP ${response.status}`);
+            }
+            const data = await response.json();
+            if (!data || !data.locations) {
+              throw new Error("Invalid locations data format");
+            }
+            locationsMap = data.locations;
+            const statesList = data.states || Object.keys(locationsMap).sort();
+            populateStates(statesList);
+            return locationsMap;
+          })
+          .catch(error => {
+            locationsLoadedPromise = null; // Allow retry
+            const defaultText = window.i18n ? window.i18n.t("profile_setup.select_state", "Select State") : "Select State";
+            stateSelect.innerHTML = `<option value="">${defaultText} (Unavailable)</option>`;
+            stateSelect.disabled = true;
+            districtSelect.innerHTML = `<option value="">Select District</option>`;
+            districtSelect.disabled = true;
+
+            // Handle loading failure visibly rather than silently swallowing errors
+            setupAlert.textContent = window.i18n
+              ? window.i18n.t("profile_setup.locations_load_error", "Failed to load location options. Please check your network and refresh.")
+              : "Failed to load location options. Please check your network and refresh.";
+            setupAlert.style.display = "block";
+            throw error;
+          });
+
+        return locationsLoadedPromise;
+      }
+
+      // Initial load of Indian locations dataset
+      loadLocations().catch(() => {});
 
       window.addEventListener("i18n:languageChanged", function () {
-        if (locationsData && Object.keys(locationsData).length > 0) {
+        if (locationsMap && Object.keys(locationsMap).length > 0) {
+          const curState = stateSelect.value;
+          const curDistrict = districtSelect.value;
           populateStates();
+          if (curState) {
+            stateSelect.value = curState;
+            stateSelect.dispatchEvent(new Event("change"));
+            if (curDistrict) {
+              districtSelect.value = curDistrict;
+            }
+          }
         }
       });
 
@@ -285,8 +455,23 @@
         const selectedState = stateSelect.value;
         const defaultDist = window.i18n ? window.i18n.t("profile_setup.select_district", "Select District") : "Select District";
         districtSelect.innerHTML = `<option value="">${defaultDist}</option>`;
-        if (selectedState && locationsData[selectedState]) {
-          locationsData[selectedState].forEach(dist => {
+
+        let districts = null;
+        if (selectedState && locationsMap) {
+          if (locationsMap[selectedState]) {
+            districts = locationsMap[selectedState];
+          } else {
+            const matchedKey = Object.keys(locationsMap).find(
+              key => key.toLowerCase() === selectedState.toLowerCase()
+            );
+            if (matchedKey) {
+              districts = locationsMap[matchedKey];
+            }
+          }
+        }
+
+        if (districts && Array.isArray(districts) && districts.length > 0) {
+          districts.forEach(dist => {
             const opt = document.createElement("option");
             opt.value = dist;
             opt.textContent = dist;
@@ -298,7 +483,313 @@
         }
       });
 
-      setupForm.addEventListener("submit", function (e) {
+      // -----------------------------------------------------------------------
+      // PIN-code lookup and automatic State/District selection
+      // -----------------------------------------------------------------------
+      if (pincodeInput && pincodeStatus) {
+        pincodeInput.addEventListener("input", function () {
+          clearTimeout(pincodeLookupTimer);
+
+          if (pincodeAbortController) {
+            pincodeAbortController.abort();
+            pincodeAbortController = null;
+          }
+
+          const pincode = pincodeInput.value.trim();
+
+          // Reset the message whenever the PIN changes
+          pincodeStatus.textContent = "";
+          pincodeStatus.style.color = "";
+
+          // Trigger lookup only when the input contains six digits and starts with a nonzero digit
+          if (!/^[1-9][0-9]{5}$/.test(pincode)) {
+            return;
+          }
+
+          pincodeStatus.textContent = "Looking up PIN code...";
+          pincodeStatus.style.color = "#666";
+
+          const lookupId = ++latestPincodeLookupId;
+
+          // Debounce input to avoid repeated requests (400ms)
+          pincodeLookupTimer = setTimeout(async function () {
+            pincodeAbortController = new AbortController();
+            const signal = pincodeAbortController.signal;
+
+            try {
+              // Wait until State/District data has loaded before attempting to match results
+              try {
+                await loadLocations();
+              } catch (locErr) {
+                if (lookupId !== latestPincodeLookupId || pincodeInput.value.trim() !== pincode) {
+                  return;
+                }
+                pincodeStatus.textContent = "Location data unavailable. Please select your location manually.";
+                pincodeStatus.style.color = "#b45309";
+                return;
+              }
+
+              if (lookupId !== latestPincodeLookupId || pincodeInput.value.trim() !== pincode) {
+                return;
+              }
+
+              const response = await fetch(
+                "https://api.postalpincode.in/pincode/" + encodeURIComponent(pincode),
+                { signal }
+              );
+
+              if (lookupId !== latestPincodeLookupId || pincodeInput.value.trim() !== pincode) {
+                return;
+              }
+
+              if (!response.ok) {
+                throw new Error("PIN lookup request failed");
+              }
+
+              const result = await response.json();
+              const offices = result?.[0]?.PostOffice;
+
+              if (lookupId !== latestPincodeLookupId || pincodeInput.value.trim() !== pincode) {
+                return;
+              }
+
+              if (result?.[0]?.Status !== "Success" || !Array.isArray(offices) || offices.length === 0) {
+                pincodeStatus.textContent = "PIN code not found. Please check it.";
+                pincodeStatus.style.color = "#b91c1c";
+                return;
+              }
+
+              const state = offices[0].State?.trim();
+              if (!state) {
+                throw new Error("Location details unavailable");
+              }
+
+              // Match State case-insensitively against existing dropdown options
+              const stateOption = Array.from(stateSelect.options).find(
+                option =>
+                  option.value.trim().toLowerCase() === state.toLowerCase() ||
+                  option.textContent.trim().toLowerCase() === state.toLowerCase()
+              );
+
+              if (!stateOption || !stateOption.value) {
+                pincodeStatus.textContent = "PIN found, but its State is not in the location list. Please select it manually.";
+                pincodeStatus.style.color = "#b45309";
+                return;
+              }
+
+              // Populate state and dispatch change to populate districts
+              stateSelect.value = stateOption.value;
+              stateSelect.dispatchEvent(new Event("change"));
+
+              // Collect district candidates from post offices for case-insensitive matching
+              const districtCandidates = [...new Set(offices.map(o => (o.District || "").trim()).filter(Boolean))];
+
+              const districtOption = Array.from(districtSelect.options).find(option =>
+                option.value && districtCandidates.some(c => option.value.trim().toLowerCase() === c.toLowerCase())
+              );
+
+              if (districtOption) {
+                districtSelect.value = districtOption.value;
+                pincodeStatus.textContent = "State and District filled automatically.";
+                pincodeStatus.style.color = "#15803d";
+              } else {
+                districtSelect.value = "";
+                pincodeStatus.textContent = "State filled automatically. Please select District manually.";
+                pincodeStatus.style.color = "#b45309";
+              }
+            } catch (error) {
+              if (error.name === "AbortError") {
+                return; // Newer lookup superseded this one
+              }
+              if (lookupId !== latestPincodeLookupId || pincodeInput.value.trim() !== pincode) {
+                return;
+              }
+              pincodeStatus.textContent = "Could not look up this PIN right now. Please select your location manually.";
+              pincodeStatus.style.color = "#b91c1c";
+            }
+          }, 400);
+        });
+      }
+
+      // -----------------------------------------------------------------------
+      // Profile Visuals & Branding (Avatar, Business Logo, Cover Banner)
+      // -----------------------------------------------------------------------
+      let setupAvatarUrl = null;
+      let setupLogoUrl = null;
+      let setupCoverUrl = null;
+
+      // Check current user to prefill existing pictures if any
+      fetch("/api/me")
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.authenticated && data.user) {
+            const u = data.user;
+            if (u.avatar) {
+              setupAvatarUrl = u.avatar;
+              const avImg = document.getElementById("setupAvatarPreview");
+              const avPh = document.getElementById("setupAvatarPlaceholder");
+              const avRem = document.getElementById("setupAvatarRemoveBtn");
+              if (avImg && avPh && avRem) {
+                avImg.src = u.avatar;
+                avImg.style.display = "block";
+                avPh.style.display = "none";
+                avRem.style.display = "inline-flex";
+              }
+            }
+            if (u.business_logo_url) {
+              setupLogoUrl = u.business_logo_url;
+              const lgImg = document.getElementById("setupLogoPreview");
+              const lgPh = document.getElementById("setupLogoPlaceholder");
+              const lgRem = document.getElementById("setupLogoRemoveBtn");
+              if (lgImg && lgPh && lgRem) {
+                lgImg.src = u.business_logo_url;
+                lgImg.style.display = "block";
+                lgPh.style.display = "none";
+                lgRem.style.display = "inline-flex";
+              }
+            }
+            if (u.cover_image_url) {
+              setupCoverUrl = u.cover_image_url;
+              const cvImg = document.getElementById("setupCoverPreview");
+              const cvPh = document.getElementById("setupCoverPlaceholder");
+              const cvRem = document.getElementById("setupCoverRemoveBtn");
+              if (cvImg && cvPh && cvRem) {
+                cvImg.src = u.cover_image_url;
+                cvImg.style.display = "block";
+                cvPh.style.display = "none";
+                cvRem.style.display = "inline-flex";
+              }
+            }
+            if (u.business_name && !document.getElementById("setupBizName").value) {
+              document.getElementById("setupBizName").value = u.business_name;
+            }
+            if (u.quote && !document.getElementById("setupQuote").value) {
+              document.getElementById("setupQuote").value = u.quote;
+            }
+            if (u.category && document.getElementById("setupCategory")) {
+              document.getElementById("setupCategory").value = u.category;
+            }
+          }
+        })
+        .catch(() => {});
+
+      async function uploadImageFile(file, imageType, previewEl, placeholderEl, removeBtnEl, statusEl) {
+        if (!file) return null;
+
+        const MAX_SIZE = 5 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+          statusEl.textContent = "File size exceeds 5 MB limit. Please choose a smaller image.";
+          statusEl.style.color = "#b91c1c";
+          statusEl.style.display = "block";
+          return null;
+        }
+
+        const allowedMime = ["image/jpeg", "image/png", "image/webp"];
+        if (!allowedMime.includes(file.type.toLowerCase())) {
+          statusEl.textContent = "Invalid format. Only JPEG, PNG, and WebP are allowed.";
+          statusEl.style.color = "#b91c1c";
+          statusEl.style.display = "block";
+          return null;
+        }
+
+        statusEl.textContent = "Uploading image...";
+        statusEl.style.color = "#0284c7";
+        statusEl.style.display = "block";
+
+        try {
+          let res = null;
+          if (window.UdyamAPI && typeof window.UdyamAPI.uploadProfileImage === "function") {
+            res = await window.UdyamAPI.uploadProfileImage(file, imageType);
+          } else {
+            const token = await ensureCsrfToken();
+            const fd = new FormData();
+            fd.append("file", file);
+            fd.append("image_type", imageType);
+            const r = await fetch("/api/upload", {
+              method: "POST",
+              headers: token ? { "X-CSRF-Token": token } : {},
+              credentials: "same-origin",
+              body: fd
+            });
+            res = await r.json();
+            if (!r.ok || !res.success) {
+              throw new Error(res.error || "Image upload failed");
+            }
+          }
+
+          if (res && res.success && res.url) {
+            previewEl.src = res.url;
+            previewEl.style.display = "block";
+            placeholderEl.style.display = "none";
+            removeBtnEl.style.display = "inline-flex";
+            statusEl.textContent = "Image uploaded successfully!";
+            statusEl.style.color = "#15803d";
+            setTimeout(() => {
+              if (statusEl.textContent === "Image uploaded successfully!") {
+                statusEl.style.display = "none";
+              }
+            }, 3000);
+            return res.url;
+          } else {
+            throw new Error(res?.error || "Image upload failed");
+          }
+        } catch (err) {
+          statusEl.textContent = err.message || "Upload failed. Please try again.";
+          statusEl.style.color = "#b91c1c";
+          statusEl.style.display = "block";
+          return null;
+        }
+      }
+
+      function setupImageControls(prefix, type, onUrlChanged) {
+        const input = document.getElementById(prefix + "Input");
+        const chooseBtn = document.getElementById(prefix + "ChooseBtn");
+        const removeBtn = document.getElementById(prefix + "RemoveBtn");
+        const preview = document.getElementById(prefix + "Preview");
+        const placeholder = document.getElementById(prefix + "Placeholder");
+        const status = document.getElementById(prefix + "Status");
+
+        if (chooseBtn && input) {
+          chooseBtn.addEventListener("click", () => input.click());
+        }
+
+        if (input) {
+          input.addEventListener("change", async () => {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const url = await uploadImageFile(file, type, preview, placeholder, removeBtn, status);
+            if (url) {
+              onUrlChanged(url);
+            }
+          });
+        }
+
+        if (removeBtn) {
+          removeBtn.addEventListener("click", () => {
+            onUrlChanged("");
+            input.value = "";
+            preview.src = "";
+            preview.style.display = "none";
+            placeholder.style.display = "flex";
+            removeBtn.style.display = "none";
+            status.textContent = "Image removed.";
+            status.style.color = "#64748b";
+            status.style.display = "block";
+            setTimeout(() => {
+              if (status.textContent === "Image removed.") status.style.display = "none";
+            }, 2500);
+          });
+        }
+      }
+
+      setupImageControls("setupAvatar", "avatar", url => { setupAvatarUrl = url; });
+      setupImageControls("setupLogo", "business_logo", url => { setupLogoUrl = url; });
+      setupImageControls("setupCover", "cover", url => { setupCoverUrl = url; });
+
+      // -----------------------------------------------------------------------
+      // Profile Setup Form Submission
+      // -----------------------------------------------------------------------
+      setupForm.addEventListener("submit", async function (e) {
         e.preventDefault();
         setupAlert.style.display = "none";
 
@@ -318,7 +809,9 @@
         const phone = document.getElementById("setupPhone").value.trim();
 
         if (pincode && !/^[1-9][0-9]{5}$/.test(pincode)) {
-          setupAlert.textContent = window.i18n ? window.i18n.t("profile_setup.pincode_invalid", "Please enter a valid 6-digit Indian PIN code.") : "Please enter a valid 6-digit Indian PIN code.";
+          setupAlert.textContent = window.i18n
+            ? window.i18n.t("profile_setup.pincode_invalid", "Please enter a valid 6-digit Indian PIN code.")
+            : "Please enter a valid 6-digit Indian PIN code.";
           setupAlert.style.display = "block";
           return;
         }
@@ -342,19 +835,34 @@
           website: website,
           phone: phone
         };
+        if (setupAvatarUrl !== null) payload.avatar = setupAvatarUrl;
+        if (setupLogoUrl !== null) payload.business_logo_url = setupLogoUrl;
+        if (setupCoverUrl !== null) payload.cover_image_url = setupCoverUrl;
 
-        fetch("/api/profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        })
-        .then(async r => {
-          const res = await r.json();
+        try {
+          const token = await ensureCsrfToken();
+          if (!token) {
+            throw new Error("Could not obtain security token");
+          }
+
+          const response = await fetch("/api/profile", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": token
+            },
+            credentials: "same-origin",
+            body: JSON.stringify(payload)
+          });
+
+          const res = await response.json();
           submitBtn.disabled = false;
           submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.submit_btn", "Save Enterprise Profile & Continue") : "Save Enterprise Profile & Continue";
 
-          if (r.ok && res.success) {
-            showToast(window.i18n ? window.i18n.t("profile_setup.completed", "Enterprise profile setup completed!") : "Enterprise profile setup completed!");
+          if (response.ok && res.success) {
+            if (typeof showToast === "function") {
+              showToast(window.i18n ? window.i18n.t("profile_setup.completed", "Enterprise profile setup completed!") : "Enterprise profile setup completed!");
+            }
             setTimeout(() => {
               window.location.href = "profile.html";
             }, 800);
@@ -362,13 +870,14 @@
             setupAlert.textContent = res.error || (window.i18n ? window.i18n.t("profile_setup.save_error", "Failed to save profile.") : "Failed to save profile.");
             setupAlert.style.display = "block";
           }
-        })
-        .catch(() => {
+        } catch (err) {
           submitBtn.disabled = false;
           submitBtn.textContent = window.i18n ? window.i18n.t("profile_setup.submit_btn", "Save Enterprise Profile & Continue") : "Save Enterprise Profile & Continue";
-          setupAlert.textContent = window.i18n ? window.i18n.t("profile_setup.network_error", "Network error. Please try again.") : "Network error. Please try again.";
+          setupAlert.textContent = err && err.message === "Could not obtain security token"
+            ? (window.i18n ? window.i18n.t("profile_setup.csrf_error", "Could not obtain security token. Please refresh and try again.") : "Could not obtain security token. Please refresh and try again.")
+            : (window.i18n ? window.i18n.t("profile_setup.network_error", "Network error. Please try again.") : "Network error. Please try again.");
           setupAlert.style.display = "block";
-        });
+        }
       });
     });
   </script>

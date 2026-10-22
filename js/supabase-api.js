@@ -714,7 +714,88 @@ window.UdyamAPI = {
 
     if (error) return [];
     return data || [];
+  },
+
+  // ---------------------------------------------------------------------------
+  // 10. Profile Image Storage & Upload Helper
+  // ---------------------------------------------------------------------------
+  async uploadProfileImage(file, imageType = "avatar") {
+    if (!file) throw new Error("No file provided");
+    const validTypes = ["avatar", "business_logo", "cover"];
+    if (!validTypes.includes(imageType)) {
+      throw new Error("Invalid image type");
+    }
+
+    // Validate size (5 MB limit)
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      throw new Error("File size exceeds 5 MB limit");
+    }
+
+    // Validate format
+    const allowedMime = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedMime.includes(file.type)) {
+      throw new Error("Invalid format. Only JPEG, PNG, and WebP are allowed.");
+    }
+
+    // If Supabase Auth session is active, attempt Supabase Storage
+    if (window.supabaseClient && window.UdyamAuth) {
+      const curUser = await window.UdyamAuth.getUser();
+      if (curUser) {
+        const ext = file.name.split(".").pop().toLowerCase() || "jpg";
+        const cleanName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+        const filePath = `${curUser.id}/${imageType}/${cleanName}`;
+
+        const { data, error } = await window.supabaseClient.storage
+          .from("profiles")
+          .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: true
+          });
+
+        if (!error && data) {
+          const { data: { publicUrl } } = window.supabaseClient.storage
+            .from("profiles")
+            .getPublicUrl(filePath);
+          return { success: true, url: publicUrl, imageType };
+        }
+      }
+    }
+
+    // Fallback to Flask backend /api/upload
+    if (!window.CSRF_TOKEN) {
+      try {
+        const cRes = await fetch("/api/csrf-token");
+        const cData = await cRes.json();
+        if (cData && cData.csrf_token) {
+          window.CSRF_TOKEN = cData.csrf_token;
+        }
+      } catch (e) {}
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("image_type", imageType);
+
+    const headers = {};
+    if (window.CSRF_TOKEN) {
+      headers["X-CSRF-Token"] = window.CSRF_TOKEN;
+    }
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers,
+      credentials: "same-origin",
+      body: formData
+    });
+
+    const res = await response.json();
+    if (!response.ok || !res.success) {
+      throw new Error(res.error || "Image upload failed");
+    }
+    return { success: true, url: res.url, imageType };
   }
 };
 
 window.ThriveHubAPI = window.UdyamAPI;
+

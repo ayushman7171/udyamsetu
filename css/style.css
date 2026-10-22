@@ -720,12 +720,15 @@ button, input, select, textarea {
    ========================================================================== */
 .auth-page {
   background-color: var(--bg-cream-soft);
-  min-height: calc(100vh - 64px);
+  min-height: 100vh;
   display: flex;
-  align-items: center;
-  padding: 40px 0;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 0;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 /* Botanical subtle leaf accent */

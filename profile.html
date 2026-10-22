@@ -46,7 +46,7 @@
 
   <!-- Profile Banner (Screen 5) -->
   <div class="profile-banner">
-    <img src="assets/images/crafts_banner.jpg" alt="Artisan workshop with handcrafted cane baskets, textiles, and pottery">
+    <img id="profileBannerImg" src="assets/images/crafts_banner.jpg" alt="Profile Banner">
   </div>
 
   <!-- Profile Container -->
@@ -60,6 +60,9 @@
           </div>
           <div class="profile-name-area">
             <div class="profile-name-row">
+              <div id="profileBusinessLogoWrap" style="display: none; align-items: center; margin-right: 8px;">
+                <img id="profileBusinessLogo" src="" alt="Business Logo" style="width: 38px; height: 38px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color); box-shadow: var(--shadow-xs);">
+              </div>
               <h1 class="profile-main-name" id="profileMainName">Loading Profile...</h1>
               <span class="badge badge-verified" id="profileVerifiedBadge" style="display: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>

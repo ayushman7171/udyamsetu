@@ -2,6 +2,7 @@ import os
 import json
 import sqlite3
 import datetime
+import uuid
 from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for
 from database import get_db, init_db, make_direct_key, create_notification
 from auth import (
@@ -683,6 +684,13 @@ def api_update_my_profile():
         if cand_lang in SUPPORTED_LANGUAGES:
             preferred_language = cand_lang
 
+    # Profile Images: personal avatar, business logo, and cover/banner image
+    avatar = (data.get("avatar") if data.get("avatar") is not None else current["avatar"]).strip()
+    if not avatar:
+        avatar = "assets/images/digital_rahul.jpg"
+    business_logo_url = (data.get("business_logo_url") if data.get("business_logo_url") is not None else (current["business_logo_url"] if "business_logo_url" in current.keys() else "")).strip()
+    cover_image_url = (data.get("cover_image_url") if data.get("cover_image_url") is not None else (current["cover_image_url"] if "cover_image_url" in current.keys() else "")).strip()
+
     cursor.execute("""
     UPDATE users
     SET name = ?,
@@ -702,14 +710,17 @@ def api_update_my_profile():
         looking_for = ?,
         skills = ?,
         website = ?,
-        phone = ?
+        phone = ?,
+        avatar = ?,
+        business_logo_url = ?,
+        cover_image_url = ?
     WHERE user_id = ?
     """, (
         name, business_name, category, location, state, district,
         subdistrict_or_town, pincode, address_landmark, pref,
         preferred_language,
         quote, description, full_story, looking_for_str, skills_str,
-        website, phone, uid
+        website, phone, avatar, business_logo_url, cover_image_url, uid
     ))
     conn.commit()
 
@@ -718,6 +729,76 @@ def api_update_my_profile():
     conn.close()
 
     return jsonify({"success": True, "user": updated_user})
+
+@app.route("/api/upload", methods=["POST"])
+@login_required
+@rate_limit(max_requests=30, window_seconds=60, key_prefix="upload")
+def api_upload_image():
+    """
+    Securely uploads a profile avatar, business logo, or cover banner image.
+    Enforces format validation (JPEG, PNG, WebP), 5 MB file size limit,
+    user-isolated directory structure, and prevents path traversal.
+    """
+    uid = get_current_user_id()
+    if "file" not in request.files:
+        return jsonify({"success": False, "error": "No file uploaded."}), 400
+
+    file = request.files["file"]
+    if not file or file.filename == "":
+        return jsonify({"success": False, "error": "No file selected."}), 400
+
+    image_type = request.form.get("image_type", "avatar").strip().lower()
+    if image_type not in ["avatar", "business_logo", "cover"]:
+        return jsonify({"success": False, "error": "Invalid image type specified."}), 400
+
+    # Validate file size (5 MB limit)
+    file.seek(0, os.SEEK_END)
+    file_size = file.tell()
+    file.seek(0)
+    if file_size > 5 * 1024 * 1024:
+        return jsonify({"success": False, "error": "File size exceeds the 5 MB limit."}), 400
+
+    # Validate file extension
+    original_ext = os.path.splitext(file.filename)[1].lower().lstrip(".")
+    if original_ext in ["jpg", "jpeg"]:
+        safe_ext = "jpg"
+    elif original_ext == "png":
+        safe_ext = "png"
+    elif original_ext == "webp":
+        safe_ext = "webp"
+    else:
+        return jsonify({"success": False, "error": "Invalid format. Only JPEG, PNG, and WebP are allowed."}), 400
+
+    # Verify image integrity with Pillow
+    try:
+        from PIL import Image
+        img = Image.open(file.stream)
+        img.verify()
+        file.seek(0)
+    except Exception:
+        return jsonify({"success": False, "error": "Invalid or corrupted image file."}), 400
+
+    # Create safe user-isolated folder
+    safe_uid = "".join(c for c in uid if c.isalnum() or c in "-_")
+    upload_dir = os.path.join(os.path.dirname(__file__), "assets", "uploads", safe_uid, image_type)
+    os.makedirs(upload_dir, exist_ok=True)
+
+    # Clean up previous image in this type folder to avoid orphaned files
+    try:
+        for fname in os.listdir(upload_dir):
+            fpath = os.path.join(upload_dir, fname)
+            if os.path.isfile(fpath):
+                os.remove(fpath)
+    except Exception:
+        pass
+
+    # Save with unique cryptographic filename
+    unique_name = f"{uuid.uuid4().hex[:16]}.{safe_ext}"
+    dest_path = os.path.join(upload_dir, unique_name)
+    file.save(dest_path)
+
+    public_url = f"/assets/uploads/{safe_uid}/{image_type}/{unique_name}"
+    return jsonify({"success": True, "url": public_url, "image_type": image_type})
 
 @app.route("/api/profile/products", methods=["POST"])
 @login_required
