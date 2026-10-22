@@ -985,7 +985,9 @@ function initDirectoryPage() {
         <div class="directory-card">
           <div class="directory-card-left">
             <div class="directory-avatar" style="position: relative;">
-              <img src="${ent.avatar || 'assets/images/digital_rahul.jpg'}" alt="${escapeHtml(ent.name)}">
+              <img src="${ent.avatar || 'assets/images/default-avatar.svg'}"
+  alt="${escapeHtml(ent.name)}"
+  onerror="this.onerror=null;this.src='assets/images/default-avatar.svg';">
               ${ent.business_logo_url ? `
                 <img src="${ent.business_logo_url}" alt="Logo" title="${escapeHtml(ent.business_name || ent.name)}" style="position: absolute; bottom: -4px; right: -4px; width: 22px; height: 22px; border-radius: 4px; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); background: #fff;">
               ` : ''}
