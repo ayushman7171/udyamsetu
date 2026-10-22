@@ -103,7 +103,7 @@ function initAuthSession() {
           const profile = await window.UdyamAuth.getProfile(session.user.id);
           window.CURRENT_USER = profile || {
             id: session.user.id,
-            user_id: session.user.user_metadata?.slug || session.user.id,
+            id: session.user.user_metadata?.slug || session.user.id,
             slug: session.user.user_metadata?.slug || session.user.id,
             name: session.user.user_metadata?.name || session.user.email.split("@")[0],
             email: session.user.email,
@@ -913,7 +913,7 @@ function initGlobalModals() {
       }
 
       const targetId = btn.getAttribute("data-user-id");
-      if (!targetId || targetId === window.CURRENT_USER.user_id) {
+      if (!targetId || targetId === window.CURRENT_USER.id) {
         showToast("You cannot connect with your own profile.");
         return;
       }
@@ -1002,9 +1002,9 @@ function initDirectoryPage() {
             </div>
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
-            <a href="profile.html?id=${encodeURIComponent(ent.user_id)}" class="btn btn-outline btn-sm">${escapeHtml(tViewProfile)}</a>
-            ${window.CURRENT_USER && window.CURRENT_USER.user_id !== ent.user_id ? `
-              <button class="btn ${isConn ? 'btn-outline connected' : 'btn-outline'} btn-sm btn-connect" data-user-id="${escapeHtml(ent.user_id)}">
+            <a href="profile.html?id=${encodeURIComponent(ent.id)}" class="btn btn-outline btn-sm">${escapeHtml(tViewProfile)}</a>
+            ${window.CURRENT_USER && window.CURRENT_USER.id !== ent.id ? `
+              <button class="btn ${isConn ? 'btn-outline connected' : 'btn-outline'} btn-sm btn-connect" data-user-id="${escapeHtml(ent.id)}">
                 ${escapeHtml(isConn ? tConnected : tConnect)}
               </button>
             ` : ''}
@@ -1193,7 +1193,7 @@ function initDashboardFeed() {
                   <span>${p.comments_count || 0} ${escapeHtml(tComments)}</span>
                 </a>
               </div>
-              ${window.CURRENT_USER && window.CURRENT_USER.user_id !== p.author_id ? `
+              ${window.CURRENT_USER && window.CURRENT_USER.id !== p.author_id ? `
                 <button class="btn btn-outline btn-sm btn-connect" data-user-id="${escapeHtml(p.author_id)}">${escapeHtml(tConnect)}</button>
               ` : ''}
             </div>
@@ -1288,7 +1288,7 @@ function initDashboardFeed() {
               <span>${p.comments_count || 0} ${escapeHtml(tComments)}</span>
             </a>
           </div>
-          ${window.CURRENT_USER && window.CURRENT_USER.user_id !== p.author_id ? `
+          ${window.CURRENT_USER && window.CURRENT_USER.id !== p.author_id ? `
             <button class="btn btn-outline btn-sm btn-connect" data-user-id="${escapeHtml(p.author_id)}">${escapeHtml(tConnect)}</button>
           ` : ''}
         </div>
@@ -1306,8 +1306,8 @@ function initDashboardFeed() {
         return r.json();
       })
       .then(users => {
-        const myUid = window.CURRENT_USER ? window.CURRENT_USER.user_id : null;
-        const filtered = users.filter(u => u.user_id !== myUid).slice(0, 3);
+        const myUid = window.CURRENT_USER ? window.CURRENT_USER.id : null;
+        const filtered = users.filter(u => u.id !== myUid).slice(0, 3);
         suggestedList.innerHTML = filtered.map(u => {
           const uCat = window.i18n ? window.i18n.t("categories." + u.category, {}, u.category) : u.category;
           const uLoc = window.i18n ? window.i18n.localizeLocation(u.location, u.state) : u.location;
@@ -1318,11 +1318,11 @@ function initDashboardFeed() {
                 <img src="${u.avatar || 'assets/images/digital_rahul.jpg'}" alt="${escapeHtml(u.name)}">
               </div>
               <div class="suggested-meta">
-                <a href="profile.html?id=${u.user_id}" class="suggested-name" style="color: inherit;">${escapeHtml(u.name)}</a>
+                <a href="profile.html?id=${u.id}" class="suggested-name" style="color: inherit;">${escapeHtml(u.name)}</a>
                 <span class="suggested-category">${escapeHtml(uCat)} • ${escapeHtml(uLoc)}</span>
               </div>
             </div>
-            <button class="btn btn-outline btn-sm btn-connect" data-user-id="${u.user_id}">${escapeHtml(tConnect)}</button>
+            <button class="btn btn-outline btn-sm btn-connect" data-user-id="${u.id}">${escapeHtml(tConnect)}</button>
           </div>
         `;
         }).join("");
@@ -1336,15 +1336,15 @@ function initDashboardFeed() {
         }
         if (fallbackUsers.length === 0 && window.UDYAM_DATA && Array.isArray(window.UDYAM_DATA.entrepreneurs)) {
           fallbackUsers = window.UDYAM_DATA.entrepreneurs.map(e => ({
-            user_id: e.id,
+            id: e.id,
             name: e.name,
             category: e.category,
             location: e.location,
             avatar: e.avatar
           }));
         }
-        const myUid = window.CURRENT_USER ? window.CURRENT_USER.user_id : null;
-        const filtered = fallbackUsers.filter(u => u.user_id !== myUid).slice(0, 3);
+        const myUid = window.CURRENT_USER ? window.CURRENT_USER.id : null;
+        const filtered = fallbackUsers.filter(u => u.id !== myUid).slice(0, 3);
         suggestedList.innerHTML = filtered.map(u => {
           const uCat = window.i18n ? window.i18n.t("categories." + u.category, {}, u.category) : u.category;
           const uLoc = window.i18n ? window.i18n.localizeLocation(u.location, u.state) : u.location;
@@ -1355,11 +1355,11 @@ function initDashboardFeed() {
                 <img src="${u.avatar || 'assets/images/digital_rahul.jpg'}" alt="${escapeHtml(u.name)}">
               </div>
               <div class="suggested-meta">
-                <a href="profile.html?id=${u.user_id}" class="suggested-name" style="color: inherit;">${escapeHtml(u.name)}</a>
+                <a href="profile.html?id=${u.id}" class="suggested-name" style="color: inherit;">${escapeHtml(u.name)}</a>
                 <span class="suggested-category">${escapeHtml(uCat)} • ${escapeHtml(uLoc)}</span>
               </div>
             </div>
-            <button class="btn btn-outline btn-sm btn-connect" data-user-id="${u.user_id}">${escapeHtml(tConnect)}</button>
+            <button class="btn btn-outline btn-sm btn-connect" data-user-id="${u.id}">${escapeHtml(tConnect)}</button>
           </div>
         `;
         }).join("");
@@ -1508,7 +1508,7 @@ function initProfilePage() {
       renderProfileData(user);
     })
     .catch(async () => {
-      const targetId = profileId || (window.CURRENT_USER ? (window.CURRENT_USER.slug || window.CURRENT_USER.id || window.CURRENT_USER.user_id) : null);
+      const targetId = profileId || (window.CURRENT_USER ? (window.CURRENT_USER.slug || window.CURRENT_USER.id || window.CURRENT_USER.id) : null);
       if (window.UdyamAPI && window.supabaseClient && targetId) {
         try {
           const detail = await window.UdyamAPI.getEntrepreneurDetail(targetId);
@@ -1519,7 +1519,7 @@ function initProfilePage() {
         } catch (_) {}
       }
       if (window.UDYAM_DATA && Array.isArray(window.UDYAM_DATA.entrepreneurs) && targetId) {
-        const found = window.UDYAM_DATA.entrepreneurs.find(e => e.id === targetId || e.user_id === targetId || e.slug === targetId);
+        const found = window.UDYAM_DATA.entrepreneurs.find(e => e.id === targetId || e.id === targetId || e.slug === targetId);
         if (found) {
           renderProfileData(found);
           return;
@@ -1558,7 +1558,7 @@ function localizeLookingForItem(item) {
 
 function renderProfileData(user) {
   window.ACTIVE_PROFILE_USER = user;
-  const isOwner = window.CURRENT_USER && window.CURRENT_USER.user_id === user.user_id;
+  const isOwner = window.CURRENT_USER && window.CURRENT_USER.id === user.id;
   const isCommunity = user.account_type === "community_member";
   const t = (k, fb) => window.i18n ? window.i18n.t(k, {}, fb !== undefined ? fb : k) : (fb !== undefined ? fb : k);
 
@@ -1630,14 +1630,14 @@ function renderProfileData(user) {
       const isConn = user.is_connected || false;
       const tConn = isConn ? t("directory.connected", "Connected ✓") : t("directory.connect", "Connect");
       headerActions.innerHTML = `
-        <button class="btn ${isConn ? 'btn-outline connected' : 'btn-primary'} btn-connect" data-user-id="${user.user_id}">
+        <button class="btn ${isConn ? 'btn-outline connected' : 'btn-primary'} btn-connect" data-user-id="${user.id}">
           ${escapeHtml(tConn)}
         </button>
-        <a href="messages.html?user=${user.user_id}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+        <a href="messages.html?user=${user.id}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
           ${escapeHtml(t("profile.message", "Message"))}
         </a>
-        <button class="btn btn-outline" onclick="window.openProposeModal('${user.user_id}', '${escapeHtml(user.name)}')">
+        <button class="btn btn-outline" onclick="window.openProposeModal('${user.id}', '${escapeHtml(user.name)}')">
           ${escapeHtml(t("profile.collaborate", "Collaborate"))}
         </button>
       `;
@@ -2466,7 +2466,7 @@ function initCollaborationsPage() {
                   <div>${escapeHtml(tPartners)}</div>
                   <div style="font-weight: 600; color: var(--text-main);">${escapeHtml(p.partner1_name)} & ${escapeHtml(p.partner2_name)}</div>
                 </div>
-                ${(window.CURRENT_USER && (window.CURRENT_USER.user_id === p.partner1_id || window.CURRENT_USER.user_id === p.partner2_id)) ? `
+                ${(window.CURRENT_USER && (window.CURRENT_USER.id === p.partner1_id || window.CURRENT_USER.id === p.partner2_id)) ? `
                   <a href="messages.html?project=${p.id}" class="btn btn-primary btn-sm" style="margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                     ${escapeHtml(tChat)}
@@ -2504,7 +2504,7 @@ function initCollaborationsPage() {
           document.body.appendChild(modal);
         }
 
-        const isAuthor = window.CURRENT_USER && window.CURRENT_USER.user_id === item.author_id;
+        const isAuthor = window.CURRENT_USER && window.CURRENT_USER.id === item.author_id;
         const catDisplay = t("categories." + item.category, item.category);
         const tagDisplay = t("collab." + item.tag, item.tag || item.category);
         const locDisplay = window.i18n ? window.i18n.localizeLocation(item.location) : item.location;
@@ -3695,9 +3695,9 @@ function initMessagesPage() {
       chatAvatar.innerHTML = `<span>${escapeHtml(initials)}</span>`;
     }
 
-    if (isDirect && other.user_id) {
+    if (isDirect && other.id) {
       chatContextBtn.textContent = window.i18n ? window.i18n.t("profile.view_profile", {}, "View Profile") : "View Profile";
-      chatContextBtn.href = `profile.html?id=${encodeURIComponent(other.user_id)}`;
+      chatContextBtn.href = `profile.html?id=${encodeURIComponent(other.id)}`;
       chatContextBtn.style.display = "inline-flex";
     } else if (!isDirect && conv.project_id) {
       chatContextBtn.textContent = window.i18n ? window.i18n.t("collab.joint_projects", {}, "View Projects") : "View Projects";
@@ -3707,7 +3707,7 @@ function initMessagesPage() {
       chatContextBtn.style.display = "none";
     }
 
-    if (isDirect && other.user_id) {
+    if (isDirect && other.id) {
       optionsBtn.style.display = "inline-flex";
       updateBlockUI(conv.is_blocked, conv.blocked_by_me, other);
     } else {
@@ -3764,20 +3764,20 @@ function initMessagesPage() {
         blockedText.textContent = `${tBlockedNotice} (${otherName})`;
         btnUnblockInBanner.style.display = "inline-block";
         btnUnblockInBanner.textContent = tUnblock;
-        btnUnblockInBanner.onclick = () => handleUnblock(other.user_id);
+        btnUnblockInBanner.onclick = () => handleUnblock(other.id);
         btnBlockUnblock.textContent = `${tUnblock} (${otherName})`;
-        btnBlockUnblock.onclick = () => handleUnblock(other.user_id);
+        btnBlockUnblock.onclick = () => handleUnblock(other.id);
       } else {
         blockedText.textContent = tBlockedNotice;
         btnUnblockInBanner.style.display = "none";
         btnBlockUnblock.textContent = `${tBlock} (${otherName})`;
-        btnBlockUnblock.onclick = () => handleBlock(other.user_id);
+        btnBlockUnblock.onclick = () => handleBlock(other.id);
       }
     } else {
       composer.style.display = "flex";
       blockedBanner.style.display = "none";
       btnBlockUnblock.textContent = `${tBlock} (${otherName})`;
-      btnBlockUnblock.onclick = () => handleBlock(other.user_id);
+      btnBlockUnblock.onclick = () => handleBlock(other.id);
     }
   }
 
@@ -3823,7 +3823,7 @@ function initMessagesPage() {
   }
 
   function appendMessageBubble(m, animate = true) {
-    const isMe = m.sender_id === window.CURRENT_USER.user_id;
+    const isMe = m.sender_id === window.CURRENT_USER.id;
     const isSystem = m.message_type === "system";
 
     if (isSystem) {
