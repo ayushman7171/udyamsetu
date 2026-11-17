@@ -3770,10 +3770,15 @@ function setMode(registerMode) {
             showAuthError(res.error || (window.i18n ? window.i18n.t("auth.err_registration_failed", {}, "Registration failed.") : "Registration failed."));
           }
         })
-        .catch(() => {
+        .catch(err => {
           authSubmitBtn.disabled = false;
           authSubmitBtn.textContent = window.i18n ? window.i18n.t("auth.register_btn", {}, "Sign Up") : "Sign Up";
-          showAuthError(window.i18n ? window.i18n.t("common.network_error", {}, "Network error. Please try again.") : "Network error. Please try again.");
+          console.error("Registration request failed:", err);
+          showAuthError(
+            window.i18n
+              ? window.i18n.t("common.network_error", {}, "Unable to reach the registration service. Please try again later.")
+              : "Unable to reach the registration service. Please try again later."
+          );
         });
       };
 
